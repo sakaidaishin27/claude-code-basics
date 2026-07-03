@@ -25,7 +25,7 @@
   --maxw:1080px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:84px}
+html{scroll-padding-top:84px}
 body{
   font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","Noto Sans JP",system-ui,-apple-system,sans-serif;
   background:var(--bg);color:var(--ink);line-height:1.9;
@@ -1029,9 +1029,9 @@ var GLOSSARY = {
         var a = map[en.target.id];
         if (a){
           a.classList.add('active');
-          /* ナビ内の横スクロールだけ動かす（scrollIntoViewはページ本体の
-             スムーズスクロールをキャンセルしてしまうため使わない） */
-          nav.scrollTo({left: a.offsetLeft - (nav.clientWidth - a.offsetWidth) / 2, behavior:'smooth'});
+          /* ナビ内の横位置だけ即時に追従させる（smoothスクロールは
+             ページ本体のスクロールと競合しキャンセルし合うため使わない） */
+          nav.scrollLeft = a.offsetLeft - (nav.clientWidth - a.offsetWidth) / 2;
         }
       }
     });
