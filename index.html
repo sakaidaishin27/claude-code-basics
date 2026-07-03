@@ -1021,12 +1021,18 @@ var GLOSSARY = {
   var links = document.querySelectorAll('nav.toc a');
   var map = {};
   links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var nav = document.getElementById('toc');
   var observer = new IntersectionObserver(function(entries){
     entries.forEach(function(en){
       if (en.isIntersecting){
         links.forEach(function(a){ a.classList.remove('active'); });
         var a = map[en.target.id];
-        if (a){ a.classList.add('active'); a.scrollIntoView({block:'nearest', inline:'center', behavior:'smooth'}); }
+        if (a){
+          a.classList.add('active');
+          /* ナビ内の横スクロールだけ動かす（scrollIntoViewはページ本体の
+             スムーズスクロールをキャンセルしてしまうため使わない） */
+          nav.scrollTo({left: a.offsetLeft - (nav.clientWidth - a.offsetWidth) / 2, behavior:'smooth'});
+        }
       }
     });
   }, {rootMargin:'-20% 0px -70% 0px'});
