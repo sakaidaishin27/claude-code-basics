@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code きほんの教科書 — 必修用語と仕組みの完全ガイド</title>
+<meta name="description" content="Claude Codeを使いこなすために必ず覚えたい用語と仕組みを、図解とたとえ話で1ページにまとめた入門ガイド。">
+<style>
+:root{
+  --bg:#FAF7F2;
+  --surface:#FFFFFF;
+  --ink:#1A1A1A;
+  --muted:#6E675F;
+  --accent:#C45A3E;
+  --accent-deep:#A34430;
+  --accent-soft:#F7E5DD;
+  --teal:#2C5F63;
+  --teal-soft:#E3EEEE;
+  --gold:#8A6D2F;
+  --gold-soft:#F3EBD8;
+  --line:#E8E0D5;
+  --code-bg:#2B2825;
+  --code-ink:#F2EBE1;
+  --radius:14px;
+  --maxw:1080px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{
+  font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","Noto Sans JP",system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.9;
+  font-feature-settings:"palt";
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent-soft)}
+
+/* ---------- header / nav ---------- */
+header.site{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,247,242,.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{max-width:var(--maxw);margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:18px}
+.brand{font-weight:800;font-size:.95rem;white-space:nowrap;letter-spacing:.02em}
+.brand b{color:var(--accent)}
+nav.toc{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+nav.toc::-webkit-scrollbar{display:none}
+nav.toc a{
+  font-size:.8rem;color:var(--muted);text-decoration:none;white-space:nowrap;
+  padding:6px 10px;border-radius:999px;transition:.15s;
+}
+nav.toc a:hover{color:var(--ink);background:var(--accent-soft)}
+nav.toc a.active{color:#fff;background:var(--accent)}
+
+/* ---------- hero ---------- */
+.hero{max-width:var(--maxw);margin:0 auto;padding:72px 20px 40px}
+.hero .kicker{
+  display:inline-block;font-size:.8rem;font-weight:700;color:var(--accent);
+  border:1px solid var(--accent);border-radius:999px;padding:2px 14px;margin-bottom:20px;letter-spacing:.08em;
+}
+.hero h1{font-size:clamp(1.9rem,5vw,3rem);line-height:1.35;font-weight:900;letter-spacing:.01em}
+.hero h1 .em{color:var(--accent)}
+.hero p.lede{margin-top:18px;font-size:1.02rem;color:var(--muted);max-width:640px}
+.hero .howto{
+  margin-top:28px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 22px;max-width:680px;font-size:.92rem;
+}
+.hero .howto b{color:var(--accent-deep)}
+.hero .howto .demo-term{border-bottom:2px dotted var(--accent);cursor:help;font-weight:600}
+
+/* ---------- layout ---------- */
+main{max-width:var(--maxw);margin:0 auto;padding:0 20px 100px;counter-reset:sec}
+section.chapter{margin-top:72px;scroll-margin-top:84px}
+.ch-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--ink);padding-bottom:10px;margin-bottom:8px}
+.ch-head::before{
+  counter-increment:sec;content:counter(sec,decimal-leading-zero);
+  font-size:2rem;font-weight:900;color:var(--accent);font-family:Georgia,serif;line-height:1;
+}
+.ch-head h2{font-size:clamp(1.25rem,3vw,1.6rem);font-weight:800}
+.ch-sub{color:var(--muted);font-size:.92rem;margin-bottom:26px}
+section.chapter h3{
+  font-size:1.08rem;font-weight:800;margin:38px 0 12px;
+  padding-left:12px;border-left:4px solid var(--accent);
+}
+section.chapter p{margin:10px 0;max-width:74ch}
+section.chapter ul.plain{margin:10px 0 10px 1.4em}
+section.chapter ul.plain li{margin:6px 0}
+
+/* ---------- term tooltip ---------- */
+.term{
+  border-bottom:2px dotted var(--accent);cursor:help;font-weight:600;color:inherit;
+  -webkit-tap-highlight-color:transparent;
+}
+.term:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+#tooltip{
+  position:absolute;z-index:200;max-width:340px;background:var(--ink);color:#FBF8F4;
+  border-radius:10px;padding:12px 15px;font-size:.83rem;line-height:1.75;
+  box-shadow:0 10px 30px rgba(26,26,26,.28);display:none;
+}
+#tooltip .tt-name{font-weight:800;color:#F0B9A5;display:block;margin-bottom:2px;font-size:.86rem}
+
+/* ---------- boxes ---------- */
+.takeaway{
+  margin:34px 0 6px;background:var(--accent-soft);border-left:5px solid var(--accent);
+  border-radius:0 var(--radius) var(--radius) 0;padding:18px 22px;
+}
+.takeaway .tl{font-size:.78rem;font-weight:800;color:var(--accent-deep);letter-spacing:.12em;display:block;margin-bottom:6px}
+.takeaway ul{margin-left:1.3em}
+.takeaway li{margin:4px 0;font-size:.95rem}
+.analogy{
+  margin:20px 0;background:var(--teal-soft);border:1px solid #CBDEDE;border-radius:var(--radius);
+  padding:16px 20px;display:flex;gap:14px;align-items:flex-start;max-width:74ch;
+}
+.analogy .a-mark{
+  flex:none;background:var(--teal);color:#fff;font-size:.72rem;font-weight:800;
+  padding:3px 10px;border-radius:999px;margin-top:4px;letter-spacing:.06em;white-space:nowrap;
+}
+.analogy p{margin:0;font-size:.93rem}
+.note{
+  margin:20px 0;background:var(--gold-soft);border:1px solid #E4D6B4;border-radius:var(--radius);
+  padding:14px 20px;font-size:.9rem;max-width:74ch;
+}
+.note b:first-child{color:var(--gold)}
+
+/* ---------- cards ---------- */
+.cards{display:grid;gap:16px;margin:20px 0}
+.cards.c2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.cards.c3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px 22px;position:relative;
+}
+.card .c-tag{
+  display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.06em;
+  padding:2px 10px;border-radius:999px;margin-bottom:10px;
+  background:var(--accent-soft);color:var(--accent-deep);
+}
+.card .c-tag.teal{background:var(--teal-soft);color:var(--teal)}
+.card .c-tag.gold{background:var(--gold-soft);color:var(--gold)}
+.card h4{font-size:1.02rem;font-weight:800;margin-bottom:6px}
+.card p{font-size:.88rem;color:#3d3a36;margin:4px 0}
+.card .c-foot{margin-top:10px;font-size:.8rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px}
+
+/* ---------- code ---------- */
+.codebox{margin:16px 0;border-radius:12px;overflow:hidden;max-width:76ch}
+.codebox .cb-title{background:#413D38;color:#CFC6BA;font-size:.75rem;padding:6px 16px;font-family:ui-monospace,Menlo,monospace}
+.codebox pre{
+  background:var(--code-bg);color:var(--code-ink);padding:16px 18px;overflow-x:auto;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.82rem;line-height:1.8;
+}
+code.inline{
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.85em;
+  background:#EFE9E0;border:1px solid var(--line);border-radius:6px;padding:1px 7px;white-space:nowrap;
+}
+.codebox .cm{color:#9C948A}
+.codebox .ck{color:#F0B9A5}
+.codebox .cs{color:#A8C7C9}
+
+/* ---------- tables ---------- */
+.tblwrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:560px}
+th{background:#F1EBE2;text-align:left;font-size:.8rem;letter-spacing:.04em;padding:11px 16px;border-bottom:2px solid var(--line);white-space:nowrap}
+td{padding:11px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.mono, .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.82rem;white-space:nowrap}
+td .lv{display:inline-block;font-size:.72rem;font-weight:800;border-radius:999px;padding:1px 10px;white-space:nowrap}
+.lv.ok{background:#E2EFE3;color:#2E6B34}
+.lv.ask{background:var(--gold-soft);color:var(--gold)}
+.lv.no{background:#F6DEDA;color:#A03325}
+
+/* ---------- agent loop diagram ---------- */
+.loopwrap{margin:26px 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px}
+.loop{display:flex;align-items:stretch;gap:0;flex-wrap:nowrap}
+.loop .lstep{
+  flex:1;min-width:0;background:var(--bg);border:2px solid var(--line);border-radius:12px;
+  padding:14px 10px;text-align:center;position:relative;
+}
+.loop .lstep.hot{border-color:var(--accent);background:var(--accent-soft)}
+.loop .lstep .ln{font-size:.7rem;font-weight:800;color:var(--accent);letter-spacing:.08em;display:block}
+.loop .lstep .lt{font-weight:800;font-size:.92rem;display:block;margin:2px 0}
+.loop .lstep .ld{font-size:.74rem;color:var(--muted);display:block;line-height:1.6}
+.loop .arr{flex:none;display:flex;align-items:center;padding:0 6px;color:var(--accent);font-weight:900;font-size:1.2rem}
+.loopback{
+  margin-top:14px;border:2px dashed var(--accent);border-top:none;border-radius:0 0 14px 14px;
+  height:34px;position:relative;margin-left:24%;margin-right:12%;
+}
+.loopback span{
+  position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);
+  background:var(--surface);padding:2px 14px;font-size:.78rem;font-weight:700;color:var(--accent-deep);white-space:nowrap;
+}
+@media(max-width:720px){
+  .loop{flex-direction:column}
+  .loop .arr{transform:rotate(90deg);justify-content:center;padding:2px 0}
+  .loopback{display:none}
+  .loopback-sp{display:block !important}
+}
+.loopback-sp{display:none;text-align:center;font-size:.8rem;font-weight:700;color:var(--accent-deep);margin-top:10px}
+
+/* ---------- folder tree ---------- */
+.tree{
+  background:var(--code-bg);border-radius:12px;padding:20px 22px;margin:16px 0;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.8rem;line-height:2.05;
+  overflow-x:auto;color:#8F887E;
+}
+.tree .row{white-space:pre;display:block}
+.tree .d{color:#F0B9A5;font-weight:700}
+.tree .f{color:#E8E1D6}
+.tree .nt{color:#8FB3B5;font-size:.74rem}
+
+/* ---------- priority ladder ---------- */
+.ladder{margin:20px 0;display:flex;flex-direction:column;gap:8px;max-width:640px}
+.ladder .rung{
+  display:flex;align-items:center;gap:14px;background:var(--surface);
+  border:1px solid var(--line);border-radius:10px;padding:10px 16px;
+}
+.ladder .rung .no{
+  flex:none;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;
+}
+.ladder .rung:nth-child(2) .no{background:#CE7154}
+.ladder .rung:nth-child(3) .no{background:#D8886B}
+.ladder .rung:nth-child(4) .no{background:#E2A083}
+.ladder .rung:nth-child(5) .no{background:#ECB89D}
+.ladder .rung .rt{font-weight:700;font-size:.9rem}
+.ladder .rung .rd{font-size:.78rem;color:var(--muted)}
+.ladder-label{display:flex;justify-content:space-between;max-width:640px;font-size:.76rem;color:var(--muted);font-weight:700}
+
+/* ---------- MCP diagram ---------- */
+.mcpdia{margin:24px 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px 20px;text-align:center}
+.mcpdia .row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.mcpdia .nodebig{
+  background:var(--ink);color:#fff;border-radius:12px;padding:14px 24px;font-weight:800;
+}
+.mcpdia .nodebig small{display:block;font-weight:400;font-size:.72rem;color:#CFC6BA}
+.mcpdia .pipe{color:var(--accent);font-weight:900;font-size:1.2rem;padding:0 4px}
+.mcpdia .hub{
+  background:var(--accent);color:#fff;border-radius:12px;padding:14px 20px;font-weight:800;
+}
+.mcpdia .hub small{display:block;font-weight:400;font-size:.72rem;color:#FBE3D9}
+.mcpdia .svcs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:0}
+.mcpdia .svc{
+  background:var(--teal-soft);color:var(--teal);border:1px solid #C4DADA;border-radius:999px;
+  padding:5px 16px;font-size:.82rem;font-weight:700;
+}
+@media(max-width:720px){
+  .mcpdia .row{flex-direction:column}
+  .mcpdia .pipe{transform:rotate(90deg)}
+}
+
+/* ---------- glossary ---------- */
+.gsearch{
+  width:100%;max-width:460px;padding:12px 18px;font-size:.95rem;border:2px solid var(--line);
+  border-radius:999px;background:var(--surface);margin:6px 0 10px;font-family:inherit;
+}
+.gsearch:focus{outline:none;border-color:var(--accent)}
+.gcat{margin-top:34px}
+.gcat h3{margin-top:0 !important}
+.gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:14px}
+.gcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.gcard dt{font-weight:800;font-size:.95rem;margin-bottom:4px;color:var(--accent-deep)}
+.gcard dt small{color:var(--muted);font-weight:500;font-size:.76rem;margin-left:6px}
+.gcard dd{font-size:.85rem;color:#3d3a36;line-height:1.8}
+.gnone{display:none;color:var(--muted);margin-top:20px}
+
+/* ---------- checklist ---------- */
+.check-progress{max-width:640px;margin:18px 0 6px}
+.check-progress .bar{height:12px;background:#EDE6DB;border-radius:999px;overflow:hidden}
+.check-progress .fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#D9825F);border-radius:999px;transition:width .3s}
+.check-progress .ct{font-size:.85rem;font-weight:700;color:var(--accent-deep);margin-top:6px}
+ul.checklist{list-style:none;margin:16px 0;max-width:680px}
+ul.checklist li{margin:8px 0}
+ul.checklist label{
+  display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);
+  border-radius:10px;padding:12px 16px;cursor:pointer;transition:.15s;font-size:.92rem;
+}
+ul.checklist label:hover{border-color:var(--accent)}
+ul.checklist input{width:18px;height:18px;margin-top:4px;accent-color:var(--accent);flex:none}
+ul.checklist input:checked + span{color:var(--muted);text-decoration:line-through}
+
+/* ---------- footer ---------- */
+footer.site{border-top:1px solid var(--line);margin-top:80px;padding:36px 20px;text-align:center;color:var(--muted);font-size:.82rem}
+footer.site .fbrand{font-weight:800;color:var(--ink);margin-bottom:4px}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-inner">
+    <div class="brand">Claude Code <b>きほんの教科書</b></div>
+    <nav class="toc" id="toc">
+      <a href="#what">とは</a>
+      <a href="#loop">仕組み</a>
+      <a href="#context">トークン</a>
+      <a href="#models">モデル</a>
+      <a href="#folders">フォルダ</a>
+      <a href="#memory">CLAUDE.md</a>
+      <a href="#permissions">設定・許可</a>
+      <a href="#hooks">Hooks</a>
+      <a href="#commands">コマンド</a>
+      <a href="#agents">スキル・エージェント</a>
+      <a href="#mcp">MCP</a>
+      <a href="#glossary">用語集</a>
+      <a href="#check">チェック</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <span class="kicker">CLAUDE CODE 入門</span>
+  <h1>これだけ覚えれば、<br>Claude Codeは<span class="em">怖くない</span>。</h1>
+  <p class="lede">Claude Codeを使いこなすために「必ず覚えたい言葉」と「動く仕組み」を、図解とたとえ話で1ページにまとめました。上から順に読めば、専門知識ゼロでも全体像がつかめます。</p>
+  <div class="howto">
+    <b>このページの使い方</b><br>
+    本文中の<span class="demo-term term" tabindex="0" data-term="トークン">点線つきの言葉</span>に<b>カーソルを乗せる（スマホはタップ）</b>と、その場で意味が表示されます。すべての用語は巻末の<a href="#glossary">用語集</a>にもまとまっています。各章末の「ここだけは覚える」だけ拾い読みしてもOKです。
+  </div>
+</div>
+
+<main>
+
+<!-- ================================================================ 1. what -->
+<section class="chapter" id="what">
+  <div class="ch-head"><h2>Claude Codeとは何か</h2></div>
+  <p class="ch-sub">まずは「チャットAIと何が違うのか」から。ここが一番大事な出発点です。</p>
+
+  <p>Claude Code（クロード コード）は、Anthropic（アンソロピック）社の<span class="term" tabindex="0" data-term="AI">AI</span>「Claude」が、<b>あなたのパソコンの中で実際に手を動かして作業してくれるツール</b>です。</p>
+  <p>ChatGPTのような「チャットAI」は、質問に<b>言葉で答える</b>ことしかできません。一方Claude Codeは、<span class="term" tabindex="0" data-term="ファイル">ファイル</span>を読み書きし、<span class="term" tabindex="0" data-term="コマンド">コマンド</span>を実行し、調べものをし、結果を確認しながら<b>作業そのものを完了まで進めます</b>。このように自分で考えて行動するAIを<span class="term" tabindex="0" data-term="エージェント">エージェント</span>と呼びます。</p>
+
+  <div class="analogy">
+    <span class="a-mark">たとえるなら</span>
+    <p>チャットAIは「<b>電話の向こうのアドバイザー</b>」。やり方は教えてくれますが、作業するのはあなたです。Claude Codeは「<b>隣の席に座って実際にPCを操作してくれるアシスタント</b>」。指示を出せば、手を動かすところまでやってくれます。</p>
+  </div>
+
+  <h3>どこで使えるのか</h3>
+  <div class="cards c2">
+    <div class="card"><span class="c-tag">基本の形</span><h4>ターミナル（CLI）</h4><p>黒い画面に文字で指示を打ち込む形。<span class="term" tabindex="0" data-term="ターミナル">ターミナル</span>で <code class="inline">claude</code> と入力すると起動します。一番シンプルで、すべての機能が使えます。</p></div>
+    <div class="card"><span class="c-tag">おすすめ</span><h4>エディタ拡張（VS Codeなど）</h4><p>コードやファイルを見ながら横のパネルで会話できる形。ファイルの変更内容が色つきで見えるので、初心者はここから始めるのがおすすめです。</p></div>
+    <div class="card"><span class="c-tag teal">その他</span><h4>デスクトップアプリ</h4><p>Mac / Windows向けの専用アプリ。ターミナルを開かなくても複数の作業を並行して進められます。</p></div>
+    <div class="card"><span class="c-tag teal">その他</span><h4>Web版（claude.ai/code）</h4><p>ブラウザから使う形。自分のPCではなくクラウド上の環境で作業させることができます。</p></div>
+  </div>
+
+  <h3>「コードを書く人専用」ではない</h3>
+  <p>名前に「Code」とありますが、実際にできることはプログラミングに限りません。<b>ファイル整理、文書作成、データ集計、リサーチ、定型業務の自動化</b>など、「パソコンの上で行う作業」全般を任せられます。経営者やビジネスパーソンにとっては「業務を自動化してくれる万能アシスタント」と捉えるのが正確です。</p>
+
+  <div class="takeaway">
+    <span class="tl">ここだけは覚える</span>
+    <ul>
+      <li>Claude Code ＝ <b>実際に手を動かすAIアシスタント</b>（答えるだけのチャットAIとは別物）</li>
+      <li>自分で考えて行動するAIを「<b>エージェント</b>」と呼ぶ</li>
+      <li>プログラミング専用ではなく、<b>PC上の作業全般</b>を任せられる</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================================ 2. loop -->
+<section class="chapter" id="loop">
+  <div class="ch-head"><h2>動く仕組み — エージェントループ</h2></div>
+  <p class="ch-sub">指示を出したあと、Claude Codeの中で何が起きているのか。この流れが分かると挙動が読めるようになります。</p>
+
+  <p>Claude Codeに指示を出すと、内部では次のサイクルが回ります。これを<b>エージェントループ</b>と呼びます。</p>
+
+  <div class="loopwrap">
+    <div class="loop">
+      <div class="lstep"><span class="ln">STEP 1</span><span class="lt">指示を受ける</span><span class="ld">あなたが日本語で依頼（＝<span class="term" tabindex="0" data-term="プロンプト">プロンプト</span>）</span></div>
+      <div class="arr">&#8594;</div>
+      <div class="lstep"><span class="ln">STEP 2</span><span class="lt">考える</span><span class="ld">何をすべきか計画を立てる</span></div>
+      <div class="arr">&#8594;</div>
+      <div class="lstep hot"><span class="ln">STEP 3</span><span class="lt">ツールを使う</span><span class="ld">ファイルを読む・書く・コマンド実行・検索</span></div>
+      <div class="arr">&#8594;</div>
+      <div class="lstep"><span class="ln">STEP 4</span><span class="lt">結果を確認</span><span class="ld">うまくいったか自分で検証</span></div>
+      <div class="arr">&#8594;</div>
+      <div class="lstep"><span class="ln">STEP 5</span><span class="lt">完了を報告</span><span class="ld">結果をあなたに説明</span></div>
+    </div>
+    <div class="loopback"><span>完了するまで STEP 2〜4 を何十回でも繰り返す</span></div>
+    <div class="loopback-sp">&#8593; 完了するまで STEP 2〜4 を繰り返す &#8593;</div>
+  </div>
+
+  <h3>「ツール」＝ Claudeの手足</h3>
+  <p>AIの本体（<span class="term" tabindex="0" data-term="LLM">LLM</span>）は、本来「文章を作る」ことしかできません。Claude Codeはそこに<span class="term" tabindex="0" data-term="ツール">ツール</span>という「手足」を与えることで、実際の作業を可能にしています。主なツールは次の通りです。</p>
+
+  <div class="tblwrap"><table>
+    <tr><th>ツール名</th><th>できること</th><th>身近に言うと</th></tr>
+    <tr><td class="mono">Read</td><td>ファイルの中身を読む</td><td>書類を開いて読む</td></tr>
+    <tr><td class="mono">Write / Edit</td><td>ファイルを新規作成・修正する</td><td>書類を書く・直す</td></tr>
+    <tr><td class="mono">Bash</td><td><span class="term" tabindex="0" data-term="コマンド">コマンド</span>を実行する</td><td>パソコンに直接指示を出す</td></tr>
+    <tr><td class="mono">Glob / Grep</td><td>ファイルを探す・中身を検索する</td><td>書庫から目当ての書類を探す</td></tr>
+    <tr><td class="mono">WebSearch / WebFetch</td><td>Web検索・ページの読み込み</td><td>ネットで調べものをする</td></tr>
+    <tr><td class="mono">Task（サブエージェント）</td><td>別のClaudeに作業を任せる</td><td>部下に仕事を振る（<a href="#agents">第10章</a>）</td></tr>
+  </table></div>
+
+  <div class="analogy">
+    <span class="a-mark">たとえるなら</span>
+    <p>優秀な新人に仕事を頼んだ場面と同じです。「資料まとめておいて」と言えば、新人は<b>資料を探し、読み、下書きし、見直して、完成したら報告に来ます</b>。途中の一つひとつの動作（ツール実行）をあなたが指示する必要はありません。ただし大事な判断（危ない操作）のときだけ「これやっていいですか？」と確認に来ます。それが<a href="#permissions">パーミッション</a>の仕組みです。</p>
+  </div>
+
+  <div class="takeaway">
+    <span class="tl">ここだけは覚える</span>
+    <ul>
+      <li>1回の指示で、Claudeは<b>何十回もツールを実行しながら自走する</b></li>
+      <li>ツール ＝ AIの手足（読む・書く・実行する・探す）</li>
+      <li>危ない操作の前だけ<b>許可を求めてくる</b>（勝手に何でもするわけではない）</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================================ 3. context -->
+<section class="chapter" id="context">
+  <div class="ch-head"><h2>トークンとコンテキスト — AIの「記憶」の仕組み</h2></div>
+  <p class="ch-sub">「なぜ長い会話は苦手なの？」「なぜ毎回CLAUDE.mdを読むの？」の答えがここにあります。</p>
+
+  <h3>トークン — AIが文章を数える単位</h3>
+  <p><span class="term" tabindex="0" data-term="トークン">トークン</span>とは、AIが文章を処理するときの最小単位です。おおまかに<b>日本語1文字 ≒ 1〜2トークン、英単語1つ ≒ 1トークン強</b>。AIの利用料金も「何トークン処理したか」で決まります。</p>
+
+  <h3>コンテキストウィンドウ — 作業机の広さ</h3>
+  <p><span class="term" tabindex="0" data-term="コンテキストウィンドウ">コンテキストウィンドウ</span>とは、Claudeが<b>一度に「見えている」情報の上限</b>です。モデルにより約20万〜100万トークン（日本語の書籍にして数冊〜十数冊分）。会話の履歴・読んだファイル・ツールの実行結果は、すべてこの中に載っています。</p>
+
+  <div class="analogy">
+    <span class="a-mark">たとえるなら</span>
+    <p>コンテキストウィンドウは「<b>作業机の広さ</b>」です。机に載っている書類（＝今の会話・読んだファイル）しか見えません。作業が長引くと机が書類でいっぱいになり、能率が落ちます。そして<b>翌朝出社すると机は完全に空</b>（＝新しいセッションでは前の会話を覚えていない）。だから「毎朝必ず机に置いておく申し送りノート」が必要になります。それが<a href="#memory">CLAUDE.md</a>です。</p>
+  </div>
+
+  <h3>机を片付ける2つのコマンド</h3>
+  <div class="cards c2">
+    <div class="card"><span class="c-tag">要約して続ける</span><h4><code class="inline">/compact</code></h4><p>それまでの会話を<b>要約して圧縮</b>し、要点だけ机に残して作業を続けます。長い作業の途中で机が狭くなってきたときに使います。放っておいても、上限が近づくと自動で要約されます（auto-compact）。</p></div>
+    <div class="card"><span class="c-tag">全部片付ける</span><h4><code class="inline">/clear</code></h4><p>会話履歴を<b>完全にリセット</b>して、まっさらな机で始めます。別の仕事に切り替えるときはこちら。前の作業内容は引き継がれません。</p></div>
+  </div>
+
+  <div class="note"><b>実務のコツ：</b>1つの仕事が終わったら <code class="inline">/clear</code> する習慣をつけると、Claudeの精度が安定します。関係ない古い話題が机に残っていると、判断がぶれる原因になります。</div>
+
+  <div class="takeaway">
+    <span class="tl">ここだけは覚える</span>
+    <ul>
+      <li>トークン ＝ AIが文章を数える単位（料金と記憶量の単位）</li>
+      <li>コンテキストウィンドウ ＝ <b>作業机の広さ</b>。机の上の物しか見えない</li>
+      <li>セッションが変わると<b>記憶はゼロ</b>。だからCLAUDE.mdに書き残す</li>
+      <li><code class="inline">/compact</code> ＝ 要約して続行、<code class="inline">/clear</code> ＝ 完全リセット</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================================ 4. models -->
+<section class="chapter" id="models">
+  <div class="ch-head"><h2>モデル — Claudeの「頭脳」を選ぶ</h2></div>
+  <p class="ch-sub">同じClaudeでも、中身の頭脳にはグレードがあります。使い分けを覚えると、速さと質とコストのバランスが取れます。</p>
+
+  <p><span class="term" tabindex="0" data-term="モデル">モデル</span>とは、AIの頭脳そのもののこと。Claudeには性格の異なる複数のモデルがあり、Claude Codeの中では <code class="inline">/model</code> という<span class="term" tabindex="0" data-term="スラッシュコマンド">スラッシュコマンド</span>でいつでも切り替えられます。</p>
+
+  <div class="cards c3">
+    <div class="card">
+      <span class="c-tag">最高性能</span>
+      <h4>Opus（オーパス）</h4>
+      <p>いちばん賢いモデル。複雑な設計、難しい調査、重要な意思決定の壁打ちなど「じっくり考えてほしい仕事」向け。</p>
+      <p class="c-foot">遅め・高コスト。ここぞの場面で。</p>
+    </div>
+    <div class="card">
+      <span class="c-tag teal">バランス型</span>
+      <h4>Sonnet（ソネット）</h4>
+      <p>賢さと速さのバランスが良い主力モデル。日常の作業の大半はSonnetで十分こなせます。迷ったらこれ。</p>
+      <p class="c-foot">日々の主力。コスパ良好。</p>
+    </div>
+    <div class="card">
+      <span class="c-tag gold">高速・軽量</span>
+      <h4>Haiku（ハイク）</h4>
+      <p>軽くて速いモデル。単純な整形、簡単な質問、大量の繰り返し処理など「量をこなす仕事」向け。</p>
+      <p class="c-foot">最速・最安。単純作業に。</p>
+    </div>
+  </div>
+
+  <p>各モデルには「Opus 4.8」「Haiku 4.5」のように<b>世代番号</b>がつきます。数字が大きいほど新しい世代です。2026年には最上位の新ティアとして<b>Claude 5ファミリー（Fable 5 / Mythos 5）</b>も登場しました。名前の格付け（賢い順）は「Fable ＞ Opus ＞ Sonnet ＞ Haiku」と覚えておけば十分です。</p>
+
+  <div class="analogy">
+    <span class="a-mark">たとえるなら</span>
+    <p>社内の人材配置と同じです。<b>エース（Opus）</b>に全部の仕事を振ると高くつくし待ち時間も長い。日常業務は<b>頼れる主力（Sonnet）</b>、雑務は<b>フットワークの軽い若手（Haiku）</b>。仕事の重さで人を選ぶように、モデルを選びます。</p>
+  </div>
+
+  <div class="takeaway">
+    <span class="tl">ここだけは覚える</span>
+    <ul>
+      <li>賢い順に <b>Opus ＞ Sonnet ＞ Haiku</b>（最上位に Claude 5 / Fable）</li>
+      <li>賢いほど遅くて高い。<b>仕事の重さでモデルを選ぶ</b></li>
+      <li>切り替えは <code class="inline">/model</code></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================================ 5. folders -->
+<section class="chapter" id="folders">
+  <div class="ch-head"><h2>フォルダ構造 — 設定はどこに置かれているか</h2></div>
+  <p class="ch-sub">Claude Codeの設定・記憶・拡張機能は、決まった場所のファイルで管理されます。場所は2つだけ覚えれば大丈夫です。</p>
+
+  <p>覚える場所は2つ。<b>ホームの <code class="inline">~/.claude/</code></b>（あなた個人の設定・全プロジェクト共通）と、<b>各プロジェクト内の <code class="inline">.claude/</code></b>（そのプロジェクト専用・チームで共有できる）です。</p>
+
+  <div class="note"><b>先に用語を2つ：</b><span class="term" tabindex="0" data-term="ホームディレクトリ">ホームディレクトリ</span>の「<code class="inline">~</code>（チルダ）」は自分のホームフォルダの略記号。「<code class="inline">.claude</code>」のように<b>名前がドットで始まるファイル・フォルダ</b>は<span class="term" tabindex="0" data-term="隠しファイル">隠しファイル</span>といい、普段は画面に表示されない設定用の置き場所です。</div>
+
+  <div class="tree">
+<span class="row"><span class="d">~/.claude/</span>                      <span class="nt">← あなた個人の設定（全プロジェクト共通）</span></span>
+<span class="row">├── <span class="f">CLAUDE.md</span>                   <span class="nt">← 全プロジェクトで毎回読まれる指示書</span></span>
+<span class="row">├── <span class="f">settings.json</span>               <span class="nt">← 個人設定（許可ルール・モデルなど）</span></span>
+<span class="row">├── <span class="d">commands/</span>                   <span class="nt">← 自作スラッシュコマンド置き場</span></span>
+<span class="row">├── <span class="d">agents/</span>                     <span class="nt">← サブエージェント定義置き場</span></span>
+<span class="row">└── <span class="d">skills/</span>                     <span class="nt">← スキル置き場</span></span>
+<span class="row"> </span>
+<span class="row"><span class="d">あなたのプロジェクト/</span>            <span class="nt">← 仕事ごとのフォルダ</span></span>
+<span class="row">├── <span class="f">CLAUDE.md</span>                   <span class="nt">← このプロジェクト専用の指示書（チーム共有）</span></span>
+<span class="row">├── <span class="d">.claude/</span></span>
+<span class="row">│   ├── <span class="f">settings.json</span>           <span class="nt">← プロジェクト設定（チーム共有・git管理）</span></span>
+<span class="row">│   ├── <span class="f">settings.local.json</span>     <span class="nt">← 自分だけの設定（共有されない）</span></span>
+<span class="row">│   ├── <span class="d">commands/</span> <span class="d">agents/</span> <span class="d">skills/</span>  <span class="nt">← プロジェクト専用の拡張</span></span>
+<span class="row">└── <span class="f">.mcp.json</span>                   <span class="nt">← 外部サービス接続の設定（第11章）</span></span>
+  </div>
+
+  <div class="analogy">
+    <span class="a-mark">たとえるなら</span>
+    <p><code class="inline">~/.claude/</code> は「<b>自分の手帳</b>」。どの現場に行っても持ち歩く自分ルール。プロジェクトの <code class="inline">.claude/</code> は「<b>現場の掲示板</b>」。その現場に入る人全員（チームメンバー全員のClaude）が同じルールを見ます。</p>
+  </div>
+
+  <h3>同じ設定がぶつかったら？ — 優先順位</h3>
+  <p>複数の場所に同じ設定があるときは、次の順で強い方が勝ちます。</p>
+  <div class="ladder-label"><span>強い（優先される）</span><span>弱い</span></div>
+  <div class="ladder">
+    <div class="rung"><span class="no">1</span><div><div class="rt">企業の管理ポリシー</div><div class="rd">会社のIT部門が配布する設定（個人では変更不可）</div></div></div>
+    <div class="rung"><span class="no">2</span><div><div class="rt">起動時の指定（コマンドライン引数）</div><div class="rd">その場かぎりの一時指定</div></div></div>
+    <div class="rung"><span class="no">3</span><div><div class="rt">.claude/settings.local.json</div><div class="rd">プロジェクト内・自分だけの設定</div></div></div>
+    <div class="rung"><span class="no">4</span><div><div class="rt">.claude/settings.json</div><div class="rd">プロジェクト共有の設定</div></div></div>
+    <div class="rung"><span class="no">5</span><div><div class="rt">~/.claude/settings.json</div><div class="rd">個人のグローバル設定</div></div></div>
+  </div>
+  <p>ざっくり「<b>より狭い範囲・より具体的な指定ほど強い</b>」と覚えればOKです。</p>
+
+  <div class="takeaway">
+    <span class="tl">ここだけは覚える</span>
+    <ul>
+      <li>設定の場所は2つ：<code class="inline">~/.claude/</code>（個人・全体共通）と プロジェクトの <code class="inline">.claude/</code>（現場専用）</li>
+      <li>手帳（個人）と現場の掲示板（プロジェクト）の関係</li>
+      <li>ぶつかったら「<b>狭い範囲の設定が勝つ</b>」</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================================ 6. memory -->
+<section class="chapter" id="memory">
+  <div class="ch-head"><h2>CLAUDE.md — 毎回読まれる「申し送りノート」</h2></div>
+  <p class="ch-sub">Claude Codeを育てる一番の急所。ここを整えるかどうかで成果が大きく変わります。</p>
+
+  <p>第3章の通り、Claudeは<b>セッションが変わると何も覚えていません</b>。そこで、起動のたびに必ず読み込まれる<span class="term" tabindex="0" data-term="Markdown">Markdown</span>ファイルが用意されています。それが <b>CLAUDE.md</b>（クロード エムディー）です。ここに書いたことは「毎回の会話の前提知識」になります。</p>
+
+  <h3>3つの階層で読み込まれる</h3>
+  <div class="tblwrap"><table>
+    <tr><th>場所</th><th>効く範囲</th><th>書く内容の例</th></tr>
+    <tr><td class="mono">~/.claude/CLAUDE.md</td><td>すべてのプロジェクト</td><td>自分の好み・共通ルール（「回答は日本語で」「ファイル削除は必ず確認」）</td></tr>
+    <tr><td class="mono">プロジェクト/CLAUDE.md</td><td>そのプロジェクト全体</td><td>事業の説明・フォルダの意味・よく使うコマンド・命名ルール</td></tr>
+    <tr><td class="mono">サブフォルダ/CLAUDE.md</td><td>そのフォルダで作業するとき</td><td>その部門・案件だけの細かいルール</td></tr>
+  </table></div>
+  <p>上の階層から順にすべて読み込まれ、重ね合わせて適用されます。「会社全体の就業規則 → 部門のルール → 案件ごとのメモ」という重なり方です。</p>
+
+  <h3>書き方のコツ</h3>
+  <ul class="plain">
+    <li><b>短く・具体的に・箇条書きで。</b>長文の物語より「・請求書はoutput/に保存」のような1行ルールが効きます</li>
+    <li><b>「するな」より「こうして」。</b>禁止だけでなく正しいやり方をセットで書く</li>
+    <li>会話の途中で「これ覚えておいて」と頼むか、メッセージの先頭に <code class="inline">#</code> を付けて送ると、その内容をCLAUDE.mdに追記してくれます</li>
+    <li><code class="inline">/init</code> と打つと、プロジェクトを分析してCLAUDE.mdの初版を自動で作ってくれます</li>
+    <li><code class="inline">@ファイルパス</code> と書くと、別ファイルの内容を取り込めます（ルールを別ファイルに分けて整理できる）</li>
+  </ul>
+
+  <div class="codebox"><div class="cb-title">プロジェクト/CLAUDE.md の例</div><pre><span class="cm"># このプロジェクトについて</span>
+- 事業内容: キックボクシングジムの運営
+- 顧客向け文書は英語、社内メモは日本語で書く
+
+<span class="cm"># ルール</span>
+- 生成したファイルは output/ フォルダに保存する
+- 表計算が必要なときはGoogle Sheetsを使う（Excel禁止）
+- 削除の前には必ず確認を取る
+
+<span class="cm"># 詳細ルールの読み込み</span>
+@rules/writing-style.md</pre></div>
+
+  <div class="analogy">
+    <span class="a-mark">たとえるなら</span>
+    <p>CLAUDE.mdは「<b>新しく来たアシスタントに毎朝渡す申し送りノート</b>」。Claudeは毎回“初出勤”なので、ノートが充実しているほど初日から即戦力になります。逆にノートが空だと、毎回ゼロから説明することになります。</p>
+  </div>
+
+  <div class="takeaway">
+    <span class="tl">ここだけは覚える</span>
+    <ul>
+      <li>CLAUDE.md ＝ <b>起動のたびに必ず読まれる申し送りノート</b></li>
+      <li>個人（全体）→ プロジェクト → サブフォルダ の3階層で重なる</li>
+      <li>短い箇条書きが最強。<code class="inline">/init</code> で初版を自動生成できる</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================================ 7. permissions -->
+<section class="chapter" id="permissions">
+  <div class="ch-head"><h2>設定とパーミッション — 安全装置の仕組み</h2></div>
+  <p class="ch-sub">「AIが勝手に何かしたら怖い」への答え。Claude Codeには多層の安全装置が組み込まれています。</p>
+
+  <p>Claude Codeは、ファイルの変更やコマンド実行のような「影響のある操作」の前に<b>あなたの許可を求めます</b>。この許可の仕組みを<span class="term" tabindex="0" data-term="パーミッション">パーミッション</span>と呼びます。毎回聞かれるのは面倒なので、<span class="term" tabindex="0" data-term="settings.json">settings.json</span>にルールを書いて「これは自動でOK」「これは毎回確認」「これは絶対禁止」を事前に決めておけます。</p>
+
+  <h3>3段階のルール</h3>
+  <div class="tblwrap"><table>
+    <tr><th>段階</th><th>意味</th><th>例</th></tr>
+    <tr><td><span class="lv ok">allow（許可）</span></td><td>確認なしで自動実行してよい</td><td>テストの実行、ファイルの読み取り</td></tr>
+    <tr><td><span class="lv ask">ask（確認）</span></td><td>実行前に毎回あなたに確認する</td><td>外部への送信、機密ファイルの読み取り</td></tr>
+    <tr><td><span class="lv no">deny（禁止）</span></td><td>何があっても実行させない</td><td>メール送信、強制削除、パスワードファイルの読み取り</td></tr>
+  </table></div>
+
+  <div class="codebox"><div class="cb-title">.claude/settings.json の例</div><pre>{
+  <span class="ck">"permissions"</span>: {
+    <span class="ck">"allow"</span>: [<span class="cs">"Bash(npm run test:*)"</span>, <span class="cs">"Read(./docs/**)"</span>],
+    <span class="ck">"ask"</span>:   [<span class="cs">"Bash(git push:*)"</span>],
+    <span class="ck">"deny"</span>:  [<span class="cs">"Read(./.env)"</span>, <span class="cs">"Bash(rm -rf:*)"</span>]
+  }
+}</pre></div>
+  <p>ルールは「<b>ツール名（対象のパターン）</b>」という形で書きます。上の例なら「npm run test で始まるコマンドは自動OK」「git push は毎回確認」「<span class="term" tabindex="0" data-term=".env">.env</span>ファイルは読むこと自体を禁止」という意味です。同じ操作に複数のルールが当てはまる場合は、<b>deny ＞ ask ＞ allow の順（厳しい方が勝つ）</b>で判定されます。</p>
+
+  <h3>パーミッションモード — セッション全体の構え</h3>
+  <div class="cards c2">
+    <div class="card"><span class="c-tag teal">標準</span><h4>default</h4><p>初期状態。安全な読み取りは自動、変更系は初回に確認。迷ったらこれ。</p></div>
+    <div class="card"><span class="c-tag teal">編集は自動</span><h4>acceptEdits</h4><p>ファイル編集の確認を省略して自動承認。作業のテンポが上がる分、変更をあとでまとめて見る前提で。</p></div>
+    <div class="card"><span class="c-tag">計画だけ</span><h4>plan（プランモード）</h4><p><b>読み取り専用</b>のモード。ファイルを一切変更せず、調査と計画立案だけさせる。大きな作業の前に「まず計画を見せて」ができる。<kbd>Shift+Tab</kbd>で切替。</p></div>
+    <div class="card"><span class="c-tag gold">上級者向け</span><h4>bypassPermissions</h4><p>すべての確認をスキップ。隔離された安全な環境以外では使わないこと。</p></div>
+  </div>
+  <p>新しいバージョンには、AIが操作の中身を見て安全なものだけ自動承認する「auto」モードなども追加されています。まずは上の4つ（特に default と plan）を覚えれば十分です。</p>
+
+  <div class="analogy">
+    <span class="a-mark">たとえるなら</span>
+    <p>新しいアシスタントへの<b>決裁権限の設計</b>と同じです。「コピー取りは勝手にやっていい（allow）」「取引先へのメールは上司確認（ask）」「契約書への押印は絶対に自分でやらない（deny）」。権限設計を最初に決めておけば、あとは安心して任せられます。</p>
+  </div>
+
+  <div class="takeaway">
+    <span class="tl">ここだけは覚える</span>
+    <ul>
+      <li>パーミッション ＝ Claudeの<b>決裁権限ルール</b>（allow / ask / deny の3段階）</li>
+      <li>ルールは settings.json に書いて事前に決められる</li>
+      <li><b>プランモード</b>（読み取り専用）を使えば「まず計画だけ」が安全にできる</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================================ 8. hooks -->
+<section class="chapter" id="hooks">
+  <div class="ch-head"><h2>Hooks — 決まったタイミングで必ず動く自動処理</h2></div>
+  <p class="ch-sub">「AIにお願いする」のではなく「仕組みで必ず実行させる」ための機能です。</p>
+
+  <p><span class="term" tabindex="0" data-term="フック">Hooks（フック）</span>とは、Claude Codeの動作の節目（イベント）に引っかけて、<b>自分で決めた処理を自動実行させる仕組み</b>です。CLAUDE.mdに「毎回◯◯して」と書いてもAIが忘れる可能性はゼロではありません。Hooksは<b>プログラムとして必ず実行される</b>ので、忘れることがありません。</p>
+
+  <div class="analogy">
+    <span class="a-mark">たとえるなら</span>
+    <p>CLAUDE.mdのルールが「<b>口頭の指示</b>」だとすると、Hooksは「<b>ドアに付けたセンサー</b>」。ドアが開けば（＝イベントが起きれば）必ずチャイムが鳴ります。人の記憶に頼らない、確実な自動化です。</p>
+  </div>
+
+  <h3>主なイベント（発火するタイミング）</h3>
+  <div class="tblwrap"><table>
+    <tr><th>イベント名</th><th>いつ動くか</th><th>使い道の例</th></tr>
+    <tr><td class="mono">PreToolUse</td><td>ツール実行の<b>直前</b></td><td>危険なコマンドを検査してブロックする</td></tr>
+    <tr><td class="mono">PostToolUse</td><td>ツール実行の<b>直後</b></td><td>ファイル編集のたびに自動で整形ツールをかける</td></tr>
+    <tr><td class="mono">UserPromptSubmit</td><td>あなたが指示を<b>送信した時</b></td><td>毎回の指示に定型の注意書きを差し込む</td></tr>
+    <tr><td class="mono">Stop</td><td>Claudeが<b>応答を終える時</b></td><td>作業完了を通知音やチャットで知らせる</td></tr>
+    <tr><td class="mono">SubagentStop</td><td>サブエージェントの作業完了時</td><td>部下エージェントの結果を記録する</td></tr>
+    <tr><td class="mono">PreCompact</td><td>会話の要約（compact）の直前</td><td>要約前に大事なメモを退避する</td></tr>
+    <tr><td class="mono">SessionStart / SessionEnd</td><td>セッションの開始時 / 終了時</td><td>開始時に最新情報を読み込ませる</td></tr>
+    <tr><td class="mono">Notification</td><td>Claudeが通知を出す時（許可待ちなど）</td><td>スマホやSlackに転送する</td></tr>
+  </table></div>
+  <p>このほかにも、ツールが失敗した時（PostToolUseFailure）、許可を求められた時（PermissionRequest）、監視中のファイルが変わった時（FileChanged）など、多くのイベントが用意されています。まずは上の表の代表的なものを覚えれば十分です。</p>
+
+  <h3>設定のイメージ</h3>
+  <div class="codebox"><div class="cb-title">settings.json に書くHooksの例（編集のたびに自動整形）</div><pre>{
+  <span class="ck">"hooks"</span>: {
+    <span class="ck">"PostToolUse"</span>: [{
+      <span class="ck">"matcher"</span>: <span class="cs">"Edit|Write"</span>,          <span class="cm">← どのツールの時に動くか</span>
+      <span class="ck">"hooks"</span>: [{ <span class="ck">"type"</span>: <span class="cs">"command"</span>,
+                   <span class="ck">"command"</span>: <span class="cs">"npx prettier --write ..."</span> }]
+    }]
+  }
+}</pre></div>
+
+  <div class="note"><b>実例：</b>「削除コマンド <code class="inline">rm</code> を検知したら、復元できるゴミ箱行きコマンドに自動で置き換える」という安全フックを PreToolUse に仕込む、といった使い方ができます。AIの善意に頼らず、仕組みで事故を防げるのがHooksの価値です。</div>
+
+  <div class="takeaway">
+    <span class="tl">ここだけは覚える</span>
+    <ul>
+      <li>Hooks ＝ 節目のイベントに引っかけて<b>必ず実行される自動処理</b></li>
+      <li>CLAUDE.md（お願い）と違い、<b>忘れることがない</b></li>
+      <li>代表イベント：PreToolUse（直前・ブロック可）/ PostToolUse（直後）/ Stop（応答完了時）</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================================ 9. commands -->
+<section class="chapter" id="commands">
+  <div class="ch-head"><h2>スラッシュコマンド — よく使う操作の短縮ダイヤル</h2></div>
+  <p class="ch-sub">「/」から始まる命令を覚えると、Claude Codeの操作が一気に速くなります。自作もできます。</p>
+
+  <p><span class="term" tabindex="0" data-term="スラッシュコマンド">スラッシュコマンド</span>は、チャット欄に <code class="inline">/</code> から始まる短い命令を打つ機能です。よく使う組み込みコマンドは次の通り。まずは太字の6つを覚えれば十分です。</p>
+
+  <div class="tblwrap"><table>
+    <tr><th>コマンド</th><th>何をするか</th></tr>
+    <tr><td class="mono"><b>/help</b></td><td>使えるコマンドの一覧を表示する</td></tr>
+    <tr><td class="mono"><b>/init</b></td><td>プロジェクトを分析してCLAUDE.mdを自動生成する</td></tr>
+    <tr><td class="mono"><b>/clear</b></td><td>会話を完全リセットする（新しい机で開始）</td></tr>
+    <tr><td class="mono"><b>/compact</b></td><td>会話を要約して圧縮する（机を片付けて続行）</td></tr>
+    <tr><td class="mono"><b>/model</b></td><td>モデル（Opus / Sonnet / Haiku など）を切り替える</td></tr>
+    <tr><td class="mono"><b>/permissions</b></td><td>許可ルール（allow / ask / deny）を確認・変更する</td></tr>
+    <tr><td class="mono">/memory</td><td>CLAUDE.md（記憶ファイル）を開いて編集する</td></tr>
+    <tr><td class="mono">/config</td><td>設定画面を開く（テーマ・通知など）</td></tr>
+    <tr><td class="mono">/mcp</td><td>MCP接続（第11章）の状態を確認・管理する</td></tr>
+    <tr><td class="mono">/agents</td><td>サブエージェント（第10章）を確認・作成する</td></tr>
+    <tr><td class="mono">/hooks</td><td>Hooks（第8章）を対話形式で設定する</td></tr>
+    <tr><td class="mono">/context</td><td>コンテキスト（作業机）の使用状況を確認する</td></tr>
+    <tr><td class="mono">/cost</td><td>今のセッションで使ったトークン量・料金を確認する</td></tr>
+    <tr><td class="mono">/resume</td><td>過去のセッション（会話）を選んで再開する</td></tr>
+    <tr><td class="mono">/rewind</td><td>会話やファイルの状態を少し前に巻き戻す</td></tr>
+    <tr><td class="mono">/status</td><td>ログイン状態・モデル・接続などの現状を確認する</td></tr>
+  </table></div>
+
+  <h3>自作コマンド — 定型業務を1語に圧縮する</h3>
+  <p><code class="inline">.claude/commands/</code> フォルダにMarkdownファイルを置くだけで、自分専用のコマンドが作れます。ファイル名がそのままコマンド名になります。</p>
+
+  <div class="codebox"><div class="cb-title">.claude/commands/weekly-report.md → 「/weekly-report」で呼び出せる</div><pre>今週の作業ログを集計して、週報を作成してください。
+
+手順:
+1. output/logs/ の今週分のファイルを読む
+2. 実施した作業を3〜5項目に要約する
+3. output/weekly/ に「YYYY-MM-DD_週報.md」として保存する
+
+補足の指示があれば考慮する: $ARGUMENTS</pre></div>
+  <p><code class="inline">$ARGUMENTS</code> と書いた場所には、コマンドの後ろに添えた言葉（例：<code class="inline">/weekly-report 先方向けに丁寧に</code>）が差し込まれます。</p>
+  <div class="note"><b>補足：</b>新しいバージョンでは、自作コマンドは次章の「スキル」と同じ仕組みに統合されつつあります（<code class="inline">.claude/skills/</code> 形式が推奨）。どちらの置き方でも「/名前」で呼び出せる点は同じです。</div>
+
+  <div class="analogy">
+    <span class="a-mark">たとえるなら</span>
+    <p>スラッシュコマンドは「<b>電話の短縮ダイヤル</b>」。毎回長い依頼文を打つ代わりに、よくある依頼を1語に登録しておくイメージです。</p>
+  </div>
+
+  <div class="takeaway">
+    <span class="tl">ここだけは覚える</span>
+    <ul>
+      <li>まず覚える6つ：<code class="inline">/help</code> <code class="inline">/init</code> <code class="inline">/clear</code> <code class="inline">/compact</code> <code class="inline">/model</code> <code class="inline">/permissions</code></li>
+      <li>自作コマンドは <code class="inline">.claude/commands/名前.md</code> を置くだけ</li>
+      <li>定型業務は自作コマンドに圧縮するのが上達の近道</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================================ 10. agents/skills -->
+<section class="chapter" id="agents">
+  <div class="ch-head"><h2>スキルとサブエージェント — Claudeに「専門性」を持たせる</h2></div>
+  <p class="ch-sub">1人のClaudeに全部やらせるのではなく、マニュアルを整備し、専門の部下を持たせる段階です。</p>
+
+  <h3>スキル — 仕事のマニュアル一式</h3>
+  <p><span class="term" tabindex="0" data-term="スキル">スキル</span>は、特定の仕事のやり方をまとめた<b>マニュアルのパッケージ</b>です。<code class="inline">.claude/skills/スキル名/SKILL.md</code> という形で、手順書に加えて参考資料や実行用スクリプトも同じフォルダに同梱できます。Claudeは会話の内容から「今この仕事だからこのマニュアルが要る」と判断し、<b>必要なときだけ自動で読み込みます</b>。</p>
+  <div class="codebox"><div class="cb-title">.claude/skills/invoice/SKILL.md の例</div><pre><span class="cm">---</span>
+<span class="ck">name</span>: <span class="cs">invoice</span>
+<span class="ck">description</span>: <span class="cs">請求書を作成するときの手順。金額・宛先の確認ルールを含む。</span>
+<span class="cm">---</span>
+
+<span class="cm"># 請求書作成の手順</span>
+1. templates/invoice-template.md の書式を使う
+2. 宛先と金額は必ず口頭確認してから確定する
+3. 完成したら output/invoices/ に保存する</pre></div>
+
+  <h3>サブエージェント — 専門の部下を持つ</h3>
+  <p><span class="term" tabindex="0" data-term="サブエージェント">サブエージェント</span>は、メインのClaudeが呼び出せる<b>別のClaude（部下）</b>です。<code class="inline">.claude/agents/名前.md</code> に「役割・使えるツール・使うモデル」を定義しておくと、メインのClaudeが適材適所で仕事を振ります。</p>
+  <div class="codebox"><div class="cb-title">.claude/agents/reviewer.md の例</div><pre><span class="cm">---</span>
+<span class="ck">name</span>: <span class="cs">reviewer</span>
+<span class="ck">description</span>: <span class="cs">文書や成果物の品質チェック担当。誤字・数字の整合・言い過ぎを検査する。</span>
+<span class="ck">tools</span>: <span class="cs">Read, Grep, Glob</span>      <span class="cm">← 読み取り専用の部下にできる</span>
+<span class="cm">---</span>
+
+あなたは品質チェックの専門家です。
+渡された成果物を批判的に検査し、問題点を重大度順に報告してください。</pre></div>
+
+  <h3>サブエージェントの2大メリット</h3>
+  <ul class="plain">
+    <li><b>机（コンテキスト）を汚さない</b> — 部下は自分専用の作業机で働くため、大量の調べものをしてもメインの机は要点の報告だけで済む</li>
+    <li><b>並列で働ける</b> — 複数の部下に同時に別の仕事を振れるので、大きな作業が速く終わる</li>
+  </ul>
+
+  <div class="analogy">
+    <span class="a-mark">たとえるなら</span>
+    <p>スキルは「<b>棚に整備された業務マニュアル</b>」（必要な時に取り出して読む）。サブエージェントは「<b>専門部署への外注</b>」（調査部・校閲部に仕事ごと渡して、報告だけ受け取る）。コマンド（第9章）が「短縮ダイヤル」なのに対し、こちらは組織づくりに近い機能です。</p>
+  </div>
+
+  <div class="takeaway">
+    <span class="tl">ここだけは覚える</span>
+    <ul>
+      <li>スキル ＝ <b>自動で読まれる業務マニュアル</b>（SKILL.md ＋ 付属資料）</li>
+      <li>サブエージェント ＝ <b>専用の机を持つ部下Claude</b>（agents/名前.md）</li>
+      <li>部下に任せるとメインの机（コンテキスト）が汚れない・並列で速い</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================================ 11. MCP -->
+<section class="chapter" id="mcp">
+  <div class="ch-head"><h2>MCP — 外部サービスとつながる共通規格</h2></div>
+  <p class="ch-sub">GmailもSlackもデータベースも。Claudeの手が「PCの外」に届くようになる仕組みです。</p>
+
+  <p><span class="term" tabindex="0" data-term="MCP">MCP</span>（Model Context Protocol／モデル・コンテキスト・プロトコル）は、<b>AIと外部サービスをつなぐための世界共通規格</b>です。Anthropicが公開し、いまや業界標準になっています。MCPでつなぐと、ClaudeはGmailの検索、Slackへの投稿、データベースの照会、カレンダー登録などを「ツール」として直接実行できるようになります。</p>
+
+  <div class="mcpdia">
+    <div class="row">
+      <div class="nodebig">Claude Code<small>あなたのAIアシスタント</small></div>
+      <div class="pipe">&#8596;</div>
+      <div class="hub">MCPサーバー<small>サービスごとの変換アダプタ</small></div>
+      <div class="pipe">&#8596;</div>
+      <div class="svcs">
+        <span class="svc">Gmail</span><span class="svc">Slack</span><span class="svc">Google Drive</span>
+        <span class="svc">Notion</span><span class="svc">データベース</span><span class="svc">GitHub</span><span class="svc">社内システム</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <span class="a-mark">たとえるなら</span>
+    <p>MCPは「<b>USB-Cのような共通コネクタ</b>」です。昔は機器ごとに専用ケーブルが必要でしたが、規格が統一されて何でも同じ差し込み口でつながるようになりました。<span class="term" tabindex="0" data-term="MCPサーバー">MCPサーバー</span>は各サービス用の「変換アダプタ」にあたります。</p>
+  </div>
+
+  <h3>使い方の基本</h3>
+  <ul class="plain">
+    <li>追加はターミナルで <code class="inline">claude mcp add</code>、確認・管理は会話中に <code class="inline">/mcp</code></li>
+    <li>接続情報はプロジェクトの <code class="inline">.mcp.json</code> に保存すればチームで共有できる</li>
+    <li>接続には「自分のPC内でアダプタを動かす方式（ローカル）」と「サービス側が用意したアダプタにネット経由でつなぐ方式（リモート）」がある</li>
+  </ul>
+
+  <div class="note"><b>注意：</b>MCPサーバーはClaudeに強い権限を与えます。<b>提供元が信頼できるものだけ</b>接続してください。また、初回接続時は認証（そのサービスへのログイン許可）が必要です。</div>
+
+  <div class="takeaway">
+    <span class="tl">ここだけは覚える</span>
+    <ul>
+      <li>MCP ＝ AIと外部サービスをつなぐ<b>共通規格（USB-Cのようなもの）</b></li>
+      <li>MCPサーバー ＝ サービスごとの<b>変換アダプタ</b></li>
+      <li>つなげば Gmail・Slack・DB などがClaudeの「ツール」になる</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================================ 12. glossary -->
+<section class="chapter" id="glossary">
+  <div class="ch-head"><h2>用語集 — これだけ覚えれば会話についていける</h2></div>
+  <p class="ch-sub">本文に出てきた用語＋周辺の頻出用語をまとめました。検索ボックスで絞り込めます。</p>
+  <input type="search" class="gsearch" id="gsearch" placeholder="用語を検索（例：トークン、MCP、フック）" aria-label="用語を検索">
+  <div id="gbody"></div>
+  <p class="gnone" id="gnone">該当する用語が見つかりませんでした。</p>
+</section>
+
+<!-- ================================================================ 13. check -->
+<section class="chapter" id="check">
+  <div class="ch-head"><h2>理解度チェック — 説明できたら合格</h2></div>
+  <p class="ch-sub">それぞれ「自分の言葉で人に説明できるか」でチェックしてください。全部チェックがつけば、Claude Codeの土台は完成です。</p>
+
+  <div class="check-progress">
+    <div class="bar"><div class="fill" id="ckfill"></div></div>
+    <div class="ct" id="ckcount">0 / 12</div>
+  </div>
+
+  <ul class="checklist" id="cklist">
+    <li><label><input type="checkbox"><span>Claude CodeとチャットAI（ChatGPT等）の違いを説明できる</span></label></li>
+    <li><label><input type="checkbox"><span>「エージェントループ」（考える→ツール実行→確認→繰り返し）の流れを説明できる</span></label></li>
+    <li><label><input type="checkbox"><span>トークンとコンテキストウィンドウを「作業机」のたとえで説明できる</span></label></li>
+    <li><label><input type="checkbox"><span>/compact と /clear の違いが言える</span></label></li>
+    <li><label><input type="checkbox"><span>Opus / Sonnet / Haiku の使い分けが言える</span></label></li>
+    <li><label><input type="checkbox"><span>~/.claude/（個人）とプロジェクトの .claude/（現場）の違いが言える</span></label></li>
+    <li><label><input type="checkbox"><span>CLAUDE.mdが何のためにあるか、なぜ必要かを説明できる</span></label></li>
+    <li><label><input type="checkbox"><span>allow / ask / deny の3段階の意味が言える</span></label></li>
+    <li><label><input type="checkbox"><span>プランモードがどういうモードか説明できる</span></label></li>
+    <li><label><input type="checkbox"><span>HooksとCLAUDE.mdのルールの違い（必ず動く vs お願い）が言える</span></label></li>
+    <li><label><input type="checkbox"><span>スキルとサブエージェントの違いが言える</span></label></li>
+    <li><label><input type="checkbox"><span>MCPが何をつなぐ規格か、USB-Cのたとえで説明できる</span></label></li>
+  </ul>
+
+  <div class="note"><b>次のステップ：</b>用語を覚えたら、次は実際に小さな仕事を1つ任せてみてください。「このフォルダのファイルを種類ごとに整理して」のような、失敗しても困らない作業から始めるのがおすすめです。使いながら、CLAUDE.mdにあなたのルールを1行ずつ育てていきましょう。</div>
+</section>
+
+</main>
+
+<div id="tooltip" role="tooltip"></div>
+
+<footer class="site">
+  <div class="fbrand">Claude Code きほんの教科書</div>
+  <div>必修用語と仕組みの完全ガイド ・ 2026年7月版</div>
+</footer>
+
+<script>
+/* ============================================================
+   GLOSSARY — 用語の単一ソース（ツールチップと用語集の両方で使用）
+   ============================================================ */
+var GLOSSARY = {
+  "基本のことば": {
+    "AI": {yomi:"エーアイ", def:"Artificial Intelligence（人工知能）。人間のような知的な処理をコンピュータで行う技術の総称。ClaudeはAIの一種。"},
+    "LLM": {yomi:"エルエルエム", def:"Large Language Model（大規模言語モデル）。大量の文章を学習して、言葉を理解・生成するAIの本体。ClaudeもChatGPTもLLM。"},
+    "生成AI": {yomi:"せいせいエーアイ", def:"文章・画像・音声などを新しく「作り出す」AIの総称。LLMは生成AIのうち言葉を扱うもの。"},
+    "エージェント": {yomi:"agent", def:"目標を渡すと、自分で計画を立ててツールを使い、完了まで自律的に動くAIのこと。「答えるだけ」のチャットAIとの一番の違い。"},
+    "プロンプト": {yomi:"prompt", def:"AIへの指示文・依頼文のこと。「この資料を要約して」のような入力すべてがプロンプト。具体的に書くほど結果が良くなる。"},
+    "モデル": {yomi:"model", def:"AIの頭脳そのもの。Claudeには Opus（最高性能）/ Sonnet（バランス）/ Haiku（高速軽量）などのグレードがあり、/model で切り替える。"},
+    "トークン": {yomi:"token", def:"AIが文章を数える最小単位。日本語1文字≒1〜2トークン、英単語≒1トークン強。AIの料金と「一度に扱える量」はトークン数で決まる。"},
+    "コンテキストウィンドウ": {yomi:"context window", def:"AIが一度に「見えている」情報量の上限。作業机の広さのようなもので、モデルにより約20万〜100万トークン。超えそうになると要約（compact）が必要になる。"},
+    "ハルシネーション": {yomi:"hallucination", def:"AIが事実でないことを、もっともらしく自信ありげに答えてしまう現象。「幻覚」の意。重要な数字・固有名詞は必ず裏取りする。"},
+    "セッション": {yomi:"session", def:"Claude Codeとの1回の作業のまとまり（会話の始まりから終わりまで）。セッションが変わると会話の記憶はリセットされる。"}
+  },
+  "パソコンのことば": {
+    "ターミナル": {yomi:"terminal", def:"文字でパソコンに指示を出すための黒い画面のアプリ。MacではTerminal、Windowsではコマンドプロンプト等。ここで claude と打つとClaude Codeが起動する。"},
+    "CLI": {yomi:"シーエルアイ", def:"Command Line Interface。マウスではなく文字入力で操作するソフトの形式。Claude Codeの基本形はCLI。反対語はGUI（画面をクリックして操作）。"},
+    "コマンド": {yomi:"command", def:"パソコンに実行させる命令文。例：ls（ファイル一覧を見る）、mkdir（フォルダを作る）。Claude CodeはBashツールでコマンドを実行する。"},
+    "ディレクトリ": {yomi:"directory", def:"フォルダのこと。技術の世界では「フォルダ」を「ディレクトリ」と呼ぶことが多い。意味は同じ。"},
+    "パス": {yomi:"path", def:"ファイルやフォルダの住所。例：/Users/taro/書類/請求書.pdf。スラッシュ区切りで場所を表す。"},
+    "ホームディレクトリ": {yomi:"home directory", def:"あなた専用の親フォルダ。Macなら /Users/名前/。記号「~（チルダ）」で略記される。~/.claude/ は「ホームの中の.claudeフォルダ」の意味。"},
+    "隠しファイル": {yomi:"dotfile", def:"名前がドット（.）で始まるファイル・フォルダ。設定用なので普段は画面に表示されない。.claude も .env も隠しファイルの仲間。"},
+    "ファイル": {yomi:"file", def:"パソコン上のデータのひとまとまり。文書・画像・設定など全てファイルとして保存される。Claude Codeの仕事の大半はファイルの読み書き。"},
+    "Markdown": {yomi:"マークダウン", def:"「# 見出し」「- 箇条書き」のような簡単な記号で文書を書く記法。拡張子は .md。CLAUDE.mdもコマンドもスキルも全部Markdownで書く。"},
+    "JSON": {yomi:"ジェイソン", def:"設定やデータを書くためのテキスト形式。{ \"名前\": \"値\" } のような波かっこの形。settings.json や .mcp.json で使われている。"},
+    "API": {yomi:"エーピーアイ", def:"プログラム同士が会話するための窓口。「Claude API」ならプログラムからClaudeを呼び出す窓口のこと。"},
+    "APIキー": {yomi:"API key", def:"APIを使うための鍵（長い英数字の文字列）。お金と権限に直結するので、ファイルに直書きしたり人に見せたりしてはいけない。"},
+    "環境変数": {yomi:"かんきょうへんすう", def:"パソコンに設定しておける「名前つきのメモ」。APIキーのような秘密情報は、コードに直書きせず環境変数に入れて参照するのが安全な作法。"},
+    ".env": {yomi:"ドットエンブ", def:"環境変数（秘密情報）をまとめて書いておく隠しファイル。パスワードやAPIキーが入るため、共有・コミット・AIによる読み取りは原則禁止にする。"},
+    "git": {yomi:"ギット", def:"ファイルの変更履歴を記録する道具。「いつ・誰が・何を変えたか」が全部残り、過去の状態に戻せる。Claude Codeと相性が良い（失敗しても戻せるため）。"},
+    "リポジトリ": {yomi:"repository", def:"gitで履歴管理されているフォルダのこと。略して「リポジトリ」「repo（レポ）」。"},
+    "コミット": {yomi:"commit", def:"gitで「この時点の状態を記録する」操作。セーブポイントを作るイメージ。"},
+    "GitHub": {yomi:"ギットハブ", def:"リポジトリをクラウド上に保管・共有するサービス。世界最大のコード置き場。このサイトもGitHub Pagesという機能で公開されている。"}
+  },
+  "Claude Codeのことば": {
+    "CLAUDE.md": {yomi:"クロード エムディー", def:"起動のたびに必ず読み込まれる「申し送りノート」。あなたのルール・プロジェクトの前提を書いておくと、毎回の会話の前提知識になる。個人用（~/.claude/）とプロジェクト用がある。"},
+    "settings.json": {yomi:"セッティングス ジェイソン", def:"Claude Codeの設定ファイル。パーミッション（allow/ask/deny）やHooksなどをJSON形式で書く。個人用・プロジェクト共有用・自分専用（local）の3種類がある。"},
+    "ツール": {yomi:"tool", def:"Claudeの「手足」。Read（読む）/ Write・Edit（書く）/ Bash（コマンド実行）/ Grep（検索）など。AI本体は文章生成しかできないが、ツールがあることで実作業ができる。"},
+    "パーミッション": {yomi:"permission", def:"Claudeの操作に対する決裁権限ルール。allow（自動OK）/ ask（毎回確認）/ deny（禁止）の3段階で、settings.jsonに定義する。"},
+    "プランモード": {yomi:"plan mode", def:"読み取り専用の安全モード。ファイルを一切変更せず、調査と計画立案だけを行わせる。大きな作業の前に「まず計画を見せて」ができる。Shift+Tabで切替。"},
+    "スラッシュコマンド": {yomi:"slash command", def:"チャット欄で「/」から始めて使う短縮命令。/clear や /model など組み込みのものと、.claude/commands/ に置く自作のものがある。"},
+    "フック": {yomi:"Hooks", def:"Claude Codeの動作の節目（ツール実行の直前・直後、応答完了時など）に、自分で決めた処理を必ず自動実行させる仕組み。AIの記憶に頼らない確実な自動化。"},
+    "スキル": {yomi:"skill", def:"特定の仕事のやり方をまとめたマニュアルのパッケージ（SKILL.md＋付属資料）。Claudeが場面に応じて自動で読み込む。.claude/skills/ に置く。"},
+    "サブエージェント": {yomi:"subagent", def:"メインのClaudeが呼び出せる部下のClaude。専用の役割・ツール・作業机（コンテキスト)を持つ。.claude/agents/ に定義し、並列で働かせることもできる。"},
+    "MCP": {yomi:"エムシーピー", def:"Model Context Protocol。AIと外部サービス（Gmail・Slack・DBなど）をつなぐ世界共通規格。USB-Cのように「差せば何でもつながる」を目指した仕組み。"},
+    "MCPサーバー": {yomi:"MCP server", def:"MCPでつなぐ際の、サービスごとの変換アダプタ。Gmail用・Slack用などがあり、接続するとそのサービスの操作がClaudeの「ツール」に追加される。"},
+    "auto-compact": {yomi:"オートコンパクト", def:"コンテキスト（作業机）が上限に近づいたとき、Claude Codeが自動で会話を要約して空きを作る機能。手動でやる場合は /compact。"},
+    "エージェントループ": {yomi:"agentic loop", def:"Claude Codeの基本動作。「考える→ツールを使う→結果を確認する」を、仕事が完了するまで自動で繰り返すサイクルのこと。"},
+    "フロントマター": {yomi:"frontmatter", def:"Markdownファイルの先頭に「---」で挟んで書く設定欄。スキルやサブエージェントの名前・説明・使用ツールなどをここに書く。"},
+    "ヘッドレス": {yomi:"headless", def:"画面での対話なしにClaude Codeを動かす形（claude -p \"指示\"）。定期実行や他のプログラムからの呼び出しに使う。上級者向け。"}
+  }
+};
+
+/* ---------- 用語集をHTMLに描画 ---------- */
+(function(){
+  var body = document.getElementById('gbody');
+  var html = '';
+  for (var cat in GLOSSARY){
+    html += '<div class="gcat"><h3>' + cat + '</h3><dl class="gcards">';
+    for (var term in GLOSSARY[cat]){
+      var e = GLOSSARY[cat][term];
+      html += '<div class="gcard" data-key="' + (term + ' ' + e.yomi + ' ' + e.def).toLowerCase() + '">'
+            + '<dt>' + term + '<small>' + e.yomi + '</small></dt>'
+            + '<dd>' + e.def + '</dd></div>';
+    }
+    html += '</dl></div>';
+  }
+  body.innerHTML = html;
+})();
+
+/* ---------- 用語検索 ---------- */
+(function(){
+  var input = document.getElementById('gsearch');
+  var none = document.getElementById('gnone');
+  input.addEventListener('input', function(){
+    var q = input.value.trim().toLowerCase();
+    var cards = document.querySelectorAll('.gcard');
+    var hit = 0;
+    cards.forEach(function(c){
+      var show = !q || c.getAttribute('data-key').indexOf(q) !== -1;
+      c.style.display = show ? '' : 'none';
+      if (show) hit++;
+    });
+    document.querySelectorAll('.gcat').forEach(function(cat){
+      var visible = cat.querySelectorAll('.gcard:not([style*="none"])').length;
+      cat.style.display = visible ? '' : 'none';
+    });
+    none.style.display = hit ? 'none' : 'block';
+  });
+})();
+
+/* ---------- ツールチップ ---------- */
+(function(){
+  var tip = document.getElementById('tooltip');
+  var current = null;
+
+  function findDef(name){
+    for (var cat in GLOSSARY){
+      if (GLOSSARY[cat][name]) return GLOSSARY[cat][name];
+    }
+    return null;
+  }
+  function show(el){
+    var name = el.getAttribute('data-term');
+    var e = findDef(name);
+    if (!e) return;
+    tip.innerHTML = '<span class="tt-name">' + name + '（' + e.yomi + '）</span>' + e.def;
+    tip.style.display = 'block';
+    var r = el.getBoundingClientRect();
+    var top = r.bottom + window.scrollY + 8;
+    var left = r.left + window.scrollX;
+    var maxLeft = window.scrollX + document.documentElement.clientWidth - tip.offsetWidth - 12;
+    if (left > maxLeft) left = Math.max(12, maxLeft);
+    tip.style.top = top + 'px';
+    tip.style.left = left + 'px';
+    current = el;
+  }
+  function hide(){ tip.style.display = 'none'; current = null; }
+
+  document.querySelectorAll('.term').forEach(function(el){
+    el.addEventListener('mouseenter', function(){ show(el); });
+    el.addEventListener('mouseleave', hide);
+    el.addEventListener('focus', function(){ show(el); });
+    el.addEventListener('blur', hide);
+    el.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      if (current === el) { hide(); } else { show(el); }
+    });
+  });
+  document.addEventListener('click', function(){ if (current) hide(); });
+  document.addEventListener('keydown', function(ev){ if (ev.key === 'Escape') hide(); });
+  window.addEventListener('scroll', function(){ if (current) hide(); }, {passive:true});
+})();
+
+/* ---------- ナビのアクティブ表示 ---------- */
+(function(){
+  var links = document.querySelectorAll('nav.toc a');
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.isIntersecting){
+        links.forEach(function(a){ a.classList.remove('active'); });
+        var a = map[en.target.id];
+        if (a){ a.classList.add('active'); a.scrollIntoView({block:'nearest', inline:'center', behavior:'smooth'}); }
+      }
+    });
+  }, {rootMargin:'-20% 0px -70% 0px'});
+  document.querySelectorAll('section.chapter').forEach(function(s){ observer.observe(s); });
+})();
+
+/* ---------- チェックリスト ---------- */
+(function(){
+  var list = document.getElementById('cklist');
+  var fill = document.getElementById('ckfill');
+  var count = document.getElementById('ckcount');
+  var boxes = list.querySelectorAll('input[type="checkbox"]');
+  function update(){
+    var done = list.querySelectorAll('input:checked').length;
+    fill.style.width = (done / boxes.length * 100) + '%';
+    count.textContent = done + ' / ' + boxes.length + (done === boxes.length ? ' — 全問クリア。土台は完成です' : '');
+  }
+  boxes.forEach(function(b){ b.addEventListener('change', update); });
+  update();
+})();
+</script>
+</body>
+</html>
