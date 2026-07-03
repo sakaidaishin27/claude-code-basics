@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>はじめてのAI — いまのAIは、ここまでやってくれる</title>
-<meta name="description" content="パソコンが得意でなくても大丈夫。いまのAIに何ができるのかを、むずかしい言葉を使わずに紹介する入門ページ。">
+<title>Claude Code 環境設計ガイド — 指示より、環境。</title>
+<meta name="description" content="CLAUDE.mdとフォルダ構成の最適化を始めた人のための実務ガイド。成果を決めるのはプロンプトの上手さではなく環境設計。">
 <style>
 :root{
   --bg:#FAF7F2;
@@ -19,15 +19,17 @@
   --gold:#8A6D2F;
   --gold-soft:#F3EBD8;
   --line:#E8E0D5;
+  --code-bg:#2B2825;
+  --code-ink:#F2EBE1;
   --radius:16px;
-  --maxw:960px;
+  --maxw:980px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-padding-top:80px}
 body{
   font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","Noto Sans JP",system-ui,-apple-system,sans-serif;
   background:var(--bg);color:var(--ink);
-  font-size:16.5px;line-height:2;
+  font-size:16px;line-height:2;
   font-feature-settings:"palt";
   -webkit-font-smoothing:antialiased;
 }
@@ -40,44 +42,48 @@ header.site{
   border-bottom:1px solid var(--line);
 }
 .nav-inner{max-width:var(--maxw);margin:0 auto;padding:11px 20px;display:flex;align-items:center;gap:16px}
-.brand{font-weight:800;font-size:.92rem;white-space:nowrap}
+.brand{font-weight:800;font-size:.9rem;white-space:nowrap}
 .brand b{color:var(--accent)}
 nav.toc{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
 nav.toc::-webkit-scrollbar{display:none}
 nav.toc a{
-  font-size:.8rem;color:var(--muted);text-decoration:none;white-space:nowrap;
-  padding:6px 11px;border-radius:999px;transition:.15s;
+  font-size:.79rem;color:var(--muted);text-decoration:none;white-space:nowrap;
+  padding:6px 10px;border-radius:999px;transition:.15s;
 }
 nav.toc a:hover{color:var(--ink);background:var(--accent-soft)}
 nav.toc a.active{color:#fff;background:var(--accent)}
 
 /* ---------- hero ---------- */
-.hero{max-width:var(--maxw);margin:0 auto;padding:80px 20px 30px;text-align:center}
+.hero{max-width:var(--maxw);margin:0 auto;padding:74px 20px 26px}
 .hero .kicker{
-  display:inline-block;font-size:.8rem;font-weight:700;color:var(--accent);
-  border:1px solid var(--accent);border-radius:999px;padding:2px 16px;margin-bottom:24px;letter-spacing:.14em;
+  display:inline-block;font-size:.78rem;font-weight:700;color:var(--accent);
+  border:1px solid var(--accent);border-radius:999px;padding:2px 16px;margin-bottom:22px;letter-spacing:.12em;
 }
-.hero h1{font-size:clamp(1.7rem,4.6vw,2.7rem);line-height:1.55;font-weight:900}
+.hero h1{font-size:clamp(1.7rem,4.6vw,2.6rem);line-height:1.5;font-weight:900}
 .hero h1 .em{color:var(--accent)}
-.hero p.lede{margin:26px auto 0;font-size:1.02rem;color:var(--muted);max-width:600px;text-align:left}
-.hero .promise{
-  margin:34px auto 0;max-width:640px;background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--radius);padding:20px 26px;text-align:left;font-size:.95rem;
+.hero p.lede{margin-top:22px;font-size:1rem;color:var(--muted);max-width:640px}
+.hero .forwho{
+  margin-top:30px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:20px 26px;max-width:680px;font-size:.92rem;
 }
-.hero .promise b{color:var(--accent-deep)}
+.hero .forwho b{color:var(--accent-deep)}
+.hero .forwho ul{margin:6px 0 0 1.4em}
+.hero .forwho li{margin:3px 0}
 
 /* ---------- layout ---------- */
 main{max-width:var(--maxw);margin:0 auto;padding:0 20px 90px}
-section.chapter{margin-top:90px;scroll-margin-top:80px}
-.ch-label{display:block;text-align:center;font-size:.78rem;font-weight:800;letter-spacing:.22em;color:var(--accent);margin-bottom:10px}
-section.chapter>h2{font-size:clamp(1.35rem,3.4vw,1.85rem);font-weight:900;text-align:center;line-height:1.6;margin-bottom:14px}
-.ch-sub{color:var(--muted);font-size:.95rem;text-align:center;max-width:620px;margin:0 auto 36px}
+section.chapter{margin-top:84px;scroll-margin-top:80px}
+.ch-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--ink);padding-bottom:10px;margin-bottom:8px}
+.ch-head .no{font-size:1.9rem;font-weight:900;color:var(--accent);font-family:Georgia,serif;line-height:1}
+.ch-head h2{font-size:clamp(1.25rem,3vw,1.55rem);font-weight:800}
+.ch-sub{color:var(--muted);font-size:.92rem;margin-bottom:26px}
 section.chapter h3{
-  font-size:1.1rem;font-weight:800;margin:44px 0 14px;
+  font-size:1.08rem;font-weight:800;margin:40px 0 14px;
   padding-left:12px;border-left:4px solid var(--accent);
 }
-section.chapter p{margin:12px auto;max-width:680px}
-.center{text-align:center}
+section.chapter p{margin:11px 0;max-width:74ch}
+section.chapter ul.plain{margin:10px 0 10px 1.4em;max-width:72ch}
+section.chapter ul.plain li{margin:6px 0}
 
 /* ---------- term tooltip ---------- */
 .term{border-bottom:2px dotted var(--accent);cursor:help;font-weight:600;-webkit-tap-highlight-color:transparent}
@@ -89,508 +95,547 @@ section.chapter p{margin:12px auto;max-width:680px}
 }
 #tooltip .tt-name{font-weight:800;color:#F0B9A5;display:block;font-size:.86rem}
 
-/* ---------- era timeline ---------- */
-.eras{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:30px 0}
-.era{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px;position:relative}
-.era.now{border:2px solid var(--accent);background:linear-gradient(180deg,#FFF,#FBF1EC)}
-.era .e-when{font-size:.76rem;font-weight:800;letter-spacing:.1em;color:var(--muted)}
-.era.now .e-when{color:var(--accent)}
-.era h4{font-size:1.12rem;font-weight:900;margin:6px 0 4px}
-.era .e-role{display:inline-block;background:var(--teal-soft);color:var(--teal);font-size:.78rem;font-weight:800;border-radius:999px;padding:2px 12px;margin:4px 0 10px}
-.era.now .e-role{background:var(--accent);color:#fff}
-.era p{font-size:.88rem;color:#3d3a36;margin:0}
-.era .e-badge{position:absolute;top:-13px;right:16px;background:var(--accent);color:#fff;font-size:.72rem;font-weight:800;border-radius:999px;padding:3px 14px;letter-spacing:.08em}
-
-/* ---------- chat compare ---------- */
-.chatcmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;margin:26px 0}
-.chatpanel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
-.chatpanel.now{border:2px solid var(--accent)}
-.chatpanel .cp-head{padding:12px 20px;font-weight:800;font-size:.92rem;background:#F1EBE2;border-bottom:1px solid var(--line)}
-.chatpanel.now .cp-head{background:var(--accent);color:#fff}
-.chatpanel .cp-body{padding:18px 16px;display:flex;flex-direction:column;gap:10px}
-.bubble{max-width:88%;border-radius:14px;padding:9px 14px;font-size:.85rem;line-height:1.75}
-.bubble.you{align-self:flex-end;background:var(--teal);color:#fff;border-bottom-right-radius:4px}
-.bubble.ai{align-self:flex-start;background:#F1EBE2;border-bottom-left-radius:4px}
-.bubble.act{align-self:flex-start;background:transparent;border:1.5px dashed var(--accent);color:var(--accent-deep);font-size:.78rem}
-.bubble .who{display:block;font-size:.68rem;font-weight:800;opacity:.75;margin-bottom:1px}
-.cp-result{padding:12px 20px;font-size:.83rem;font-weight:700;border-top:1px dashed var(--line)}
-.cp-result.bad{color:#A03325}
-.cp-result.good{color:#2E6B34}
-
-/* ---------- change cards ---------- */
-.cards{display:grid;gap:14px;margin:26px 0}
-.cards.c3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-.cards.c2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px}
-.card .c-no{font-family:Georgia,serif;font-size:1.7rem;font-weight:900;color:var(--accent);line-height:1;display:block;margin-bottom:8px}
-.card h4{font-size:1.02rem;font-weight:800;margin-bottom:8px;line-height:1.6}
-.card p{font-size:.88rem;color:#3d3a36;margin:0;max-width:none}
-.card h4 .arrow{color:var(--accent)}
-
-/* ---------- example (before/after) ---------- */
-.examples{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin:26px 0}
-.ex{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px}
-.ex h4{font-size:.98rem;font-weight:800;margin-bottom:4px}
-.ex .ex-desc{font-size:.83rem;color:var(--muted);margin-bottom:14px;line-height:1.7}
-.ex .bar-row{display:flex;align-items:center;gap:8px;margin:7px 0}
-.ex .bar-label{flex:none;width:6.2em;font-size:.72rem;font-weight:700;color:var(--muted)}
-.ex .bar{height:14px;border-radius:999px;min-width:14px}
-.ex .bar.slow{background:#D8CFC2;flex-grow:1}
-.ex .bar.fast{background:var(--accent)}
-.ex .bar-time{font-size:.78rem;font-weight:800;white-space:nowrap}
-.ex .bar-row.after .bar-time{color:var(--accent-deep)}
-
 /* ---------- boxes ---------- */
-.analogy{
-  margin:26px auto;background:var(--teal-soft);border:1px solid #CBDEDE;border-radius:var(--radius);
-  padding:18px 22px;display:flex;gap:14px;align-items:flex-start;max-width:680px;
-}
-.analogy .a-mark{flex:none;background:var(--teal);color:#fff;font-size:.72rem;font-weight:800;padding:3px 12px;border-radius:999px;margin-top:5px;white-space:nowrap}
-.analogy p{margin:0;font-size:.92rem}
 .takeaway{
-  margin:40px auto 0;background:var(--accent-soft);border-left:5px solid var(--accent);
-  border-radius:0 var(--radius) var(--radius) 0;padding:18px 24px;max-width:680px;
+  margin:36px 0 6px;background:var(--accent-soft);border-left:5px solid var(--accent);
+  border-radius:0 var(--radius) var(--radius) 0;padding:18px 24px;
 }
 .takeaway .tl{font-size:.78rem;font-weight:800;color:var(--accent-deep);letter-spacing:.12em;display:block;margin-bottom:6px}
 .takeaway ul{margin-left:1.3em}
 .takeaway li{margin:4px 0;font-size:.94rem}
+.analogy{
+  margin:22px 0;background:var(--teal-soft);border:1px solid #CBDEDE;border-radius:var(--radius);
+  padding:16px 22px;display:flex;gap:14px;align-items:flex-start;max-width:76ch;
+}
+.analogy .a-mark{flex:none;background:var(--teal);color:#fff;font-size:.72rem;font-weight:800;padding:3px 12px;border-radius:999px;margin-top:5px;white-space:nowrap}
+.analogy p{margin:0;font-size:.92rem}
 .note{
-  margin:22px auto;background:var(--gold-soft);border:1px solid #E4D6B4;border-radius:var(--radius);
-  padding:14px 22px;font-size:.9rem;max-width:680px;
+  margin:20px 0;background:var(--gold-soft);border:1px solid #E4D6B4;border-radius:var(--radius);
+  padding:14px 22px;font-size:.9rem;max-width:76ch;
 }
 .note b:first-child{color:var(--gold)}
 
-/* ---------- aruaru checklist ---------- */
-.aruaru{max-width:680px;margin:26px auto}
-.aruaru label{
+/* ---------- cards ---------- */
+.cards{display:grid;gap:14px;margin:22px 0}
+.cards.c5{grid-template-columns:repeat(auto-fit,minmax(175px,1fr))}
+.cards.c3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.cards.c2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px}
+.card .c-no{font-family:Georgia,serif;font-size:1.5rem;font-weight:900;color:var(--accent);line-height:1.2;display:block;margin-bottom:6px}
+.card .c-tag{
+  display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.06em;
+  padding:2px 10px;border-radius:999px;margin-bottom:8px;background:var(--accent-soft);color:var(--accent-deep);
+}
+.card .c-tag.teal{background:var(--teal-soft);color:var(--teal)}
+.card h4{font-size:.99rem;font-weight:800;margin-bottom:6px;line-height:1.6}
+.card p{font-size:.87rem;color:#3d3a36;margin:3px 0;max-width:none}
+
+/* ---------- good/bad compare ---------- */
+.gb{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin:20px 0}
+.gb>div{border-radius:var(--radius);overflow:hidden;border:1px solid}
+.gb .b{background:#F9F1EF;border-color:#E3C9C2}
+.gb .g{background:#F2F6F0;border-color:#CBDCC5}
+.gb .gb-head{padding:10px 18px;font-size:.82rem;font-weight:800;color:#fff}
+.gb .b .gb-head{background:#B5543D}
+.gb .g .gb-head{background:#2E6B34}
+.gb .gb-body{padding:14px 18px;font-size:.88rem}
+.gb .gb-body p{margin:6px 0;max-width:none}
+.gb pre{
+  background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:14px 16px;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.78rem;line-height:1.85;
+  overflow-x:auto;margin:10px 0;
+}
+.gb .why{font-size:.8rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px;margin-top:10px}
+
+/* ---------- code / tree ---------- */
+.codebox{margin:16px 0;border-radius:12px;overflow:hidden;max-width:78ch}
+.codebox .cb-title{background:#413D38;color:#CFC6BA;font-size:.75rem;padding:6px 16px;font-family:ui-monospace,Menlo,monospace}
+.codebox pre{
+  background:var(--code-bg);color:var(--code-ink);padding:16px 18px;overflow-x:auto;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.8rem;line-height:1.9;
+}
+.codebox .cm{color:#9C948A}
+.codebox .ck{color:#F0B9A5}
+code.inline{
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.85em;
+  background:#EFE9E0;border:1px solid var(--line);border-radius:6px;padding:1px 7px;white-space:nowrap;
+}
+
+/* ---------- tables ---------- */
+.tblwrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:560px}
+th{background:#F1EBE2;text-align:left;font-size:.8rem;letter-spacing:.04em;padding:11px 16px;border-bottom:2px solid var(--line);white-space:nowrap}
+td{padding:11px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.8rem;white-space:nowrap}
+td .lv{display:inline-block;font-size:.72rem;font-weight:800;border-radius:999px;padding:1px 10px;white-space:nowrap}
+.lv.ok{background:#E2EFE3;color:#2E6B34}
+.lv.ask{background:var(--gold-soft);color:var(--gold)}
+.lv.no{background:#F6DEDA;color:#A03325}
+
+/* ---------- loop diagram ---------- */
+.cyclewrap{margin:24px 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px;max-width:78ch}
+.cycle{display:flex;align-items:stretch;flex-wrap:nowrap}
+.cycle .cstep{flex:1;min-width:0;background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:12px 10px;text-align:center}
+.cycle .cstep.hot{border-color:var(--accent);background:var(--accent-soft)}
+.cycle .cstep .ct{font-weight:800;font-size:.88rem;display:block}
+.cycle .cstep .cd{font-size:.73rem;color:var(--muted);display:block;line-height:1.6}
+.cycle .carr{flex:none;display:flex;align-items:center;padding:0 7px;color:var(--accent);font-weight:900;font-size:1.15rem}
+@media(max-width:680px){
+  .cycle{flex-direction:column}
+  .cycle .carr{transform:rotate(90deg);justify-content:center;padding:2px 0}
+}
+.cycle-note{text-align:center;font-size:.8rem;font-weight:700;color:var(--accent-deep);margin-top:12px}
+
+/* ---------- checklist ---------- */
+.check-progress{max-width:680px;margin:18px 0 8px}
+.check-progress .bar{height:12px;background:#EDE6DB;border-radius:999px;overflow:hidden}
+.check-progress .fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#D9825F);border-radius:999px;transition:width .3s}
+.check-progress .ct{font-size:.88rem;font-weight:800;color:var(--accent-deep);margin-top:8px}
+.ckgroup{max-width:680px;margin:22px 0}
+.ckgroup h4{font-size:.85rem;font-weight:800;color:var(--muted);letter-spacing:.08em;margin-bottom:8px}
+ul.checklist{list-style:none;margin:0}
+ul.checklist li{margin:8px 0}
+ul.checklist label{
   display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);
-  border-radius:12px;padding:13px 18px;cursor:pointer;transition:.15s;font-size:.93rem;margin:8px 0;
+  border-radius:10px;padding:12px 16px;cursor:pointer;transition:.15s;font-size:.9rem;
 }
-.aruaru label:hover{border-color:var(--accent)}
-.aruaru label.on{border-color:var(--accent);background:var(--accent-soft)}
-.aruaru input{width:19px;height:19px;margin-top:6px;accent-color:var(--accent);flex:none}
-.aruaru-result{
-  max-width:680px;margin:18px auto 0;text-align:center;border-radius:var(--radius);
-  padding:18px 22px;font-weight:800;font-size:.98rem;transition:.2s;
-  background:#F1EBE2;color:var(--muted);
+ul.checklist label:hover{border-color:var(--accent)}
+ul.checklist label.on{border-color:var(--accent);background:var(--accent-soft)}
+ul.checklist input{width:18px;height:18px;margin-top:5px;accent-color:var(--accent);flex:none}
+.ck-verdict{
+  max-width:680px;margin:20px 0 0;border-radius:var(--radius);padding:18px 24px;
+  background:#F1EBE2;color:var(--muted);font-size:.94rem;font-weight:700;transition:.2s;
 }
-.aruaru-result.lit{background:var(--accent);color:#fff}
-
-/* ---------- good/bad ---------- */
-.gb{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin:20px 0}
-.gb .g,.gb .b{border-radius:var(--radius);padding:18px 22px;font-size:.9rem}
-.gb .b{background:#F3E7E4;border:1px solid #E3C9C2}
-.gb .g{background:#E9F0E6;border:1px solid #CBDCC5}
-.gb .tag{display:inline-block;font-size:.72rem;font-weight:800;border-radius:999px;padding:2px 12px;margin-bottom:8px}
-.gb .b .tag{background:#C45A3E;color:#fff}
-.gb .g .tag{background:#2E6B34;color:#fff}
-.gb p{margin:0;max-width:none}
-.gb .say{font-weight:800;font-size:.97rem;display:block;margin-bottom:6px}
-
-/* ---------- Q&A ---------- */
-.qa{max-width:680px;margin:26px auto}
-.qa details{
-  background:var(--surface);border:1px solid var(--line);border-radius:12px;
-  margin:10px 0;overflow:hidden;
-}
-.qa summary{
-  list-style:none;cursor:pointer;padding:15px 20px;font-weight:800;font-size:.95rem;
-  display:flex;gap:12px;align-items:baseline;
-}
-.qa summary::-webkit-details-marker{display:none}
-.qa summary .q{flex:none;color:var(--accent);font-family:Georgia,serif;font-weight:900}
-.qa summary::after{content:"＋";margin-left:auto;color:var(--muted);font-weight:400}
-.qa details[open] summary::after{content:"−"}
-.qa .a{padding:0 20px 16px 20px;font-size:.9rem;color:#3d3a36}
-.qa .a p{margin:6px 0;max-width:none}
-
-/* ---------- steps ---------- */
-.steps{max-width:680px;margin:26px auto;display:flex;flex-direction:column;gap:0}
-.step{display:flex;gap:18px}
-.step .s-rail{display:flex;flex-direction:column;align-items:center;flex:none}
-.step .s-no{
-  width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;
-  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.05rem;flex:none;
-}
-.step .s-line{width:2px;flex:1;background:var(--line);min-height:18px}
-.step:last-child .s-line{display:none}
-.step .s-body{padding:6px 0 30px}
-.step h4{font-size:1.05rem;font-weight:800;margin-bottom:4px}
-.step p{font-size:.9rem;color:#3d3a36;margin:4px 0;max-width:none}
-.step .s-say{
-  display:inline-block;background:#F1EBE2;border-radius:12px;border-bottom-left-radius:4px;
-  padding:8px 16px;font-size:.86rem;margin-top:6px;
-}
-
-/* ---------- glossary ---------- */
-.gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:22px}
-.gcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
-.gcard dt{font-weight:800;font-size:.96rem;margin-bottom:4px;color:var(--accent-deep)}
-.gcard dt small{color:var(--muted);font-weight:500;font-size:.76rem;margin-left:6px}
-.gcard dd{font-size:.86rem;color:#3d3a36;line-height:1.85}
+.ck-verdict.lit{background:var(--ink);color:#FBF8F4}
+.ck-verdict .v-score{font-family:Georgia,serif;font-size:1.5rem;font-weight:900;color:var(--accent);margin-right:10px}
 
 /* ---------- closing ---------- */
 .closing{
-  margin-top:90px;background:var(--ink);border-radius:var(--radius);
-  padding:56px 30px;text-align:center;color:#FBF8F4;
+  margin-top:84px;background:var(--ink);border-radius:var(--radius);
+  padding:52px 30px;text-align:center;color:#FBF8F4;
 }
-.closing h2{font-size:clamp(1.3rem,3.4vw,1.7rem);font-weight:900;line-height:1.8}
+.closing h2{font-size:clamp(1.25rem,3.2vw,1.6rem);font-weight:900;line-height:1.85}
 .closing h2 .em{color:#F0B9A5}
-.closing p{color:#CFC6BA;font-size:.94rem;max-width:560px;margin:18px auto 0;text-align:left}
+.closing p{color:#CFC6BA;font-size:.93rem;max-width:580px;margin:16px auto 0;text-align:left}
 
-footer.site{border-top:1px solid var(--line);margin-top:70px;padding:34px 20px;text-align:center;color:var(--muted);font-size:.82rem}
+footer.site{border-top:1px solid var(--line);margin-top:70px;padding:32px 20px;text-align:center;color:var(--muted);font-size:.82rem}
 footer.site .fbrand{font-weight:800;color:var(--ink);margin-bottom:4px}
 
-@media(max-width:640px){
-  body{font-size:15.5px}
-  .hero{padding-top:56px}
-}
+@media(max-width:640px){ body{font-size:15.5px} .hero{padding-top:54px} }
 </style>
 </head>
 <body>
 
 <header class="site">
   <div class="nav-inner">
-    <div class="brand">はじめての<b>AI</b></div>
+    <div class="brand">Claude Code <b>環境設計ガイド</b></div>
     <nav class="toc" id="toc">
-      <a href="#diff">何が変わった？</a>
-      <a href="#can">何ができる？</a>
-      <a href="#fit">得意と苦手</a>
-      <a href="#worry">心配ごと</a>
-      <a href="#howto">頼み方のコツ</a>
-      <a href="#start">最初の一歩</a>
-      <a href="#words">ことば辞典</a>
+      <a href="#why">考え方</a>
+      <a href="#claudemd">CLAUDE.md</a>
+      <a href="#folders">フォルダ構造</a>
+      <a href="#knowledge">知識の置き場</a>
+      <a href="#commands">部品化</a>
+      <a href="#guard">権限とHooks</a>
+      <a href="#session">セッション運用</a>
+      <a href="#check">健康診断</a>
     </nav>
   </div>
 </header>
 
 <div class="hero">
-  <span class="kicker">はじめてのAI</span>
-  <h1>いまのAIは、あなたの代わりに<br><span class="em">手を動かして</span>くれます。</h1>
-  <p class="lede">プログラミングは要りません。専門知識も要りません。日本語で頼むだけです。このページでは、パソコンが得意でない方のために、いまのAIに何ができるのかを、むずかしい言葉を使わずにご紹介します。読み終わるころに「これなら私にもできそう」と思ってもらえたら成功です。</p>
-  <div class="promise">
-    <b>このページの約束</b><br>
-    専門用語はほとんど使いません。どうしても必要な言葉には<span class="term" tabindex="0" data-term="点線のことば">点線</span>がついていて、触れると意味が出ます。難しいと感じたら、それはあなたのせいではなく、このページの改善点です。
+  <span class="kicker">CLAUDE CODE 環境設計ガイド</span>
+  <h1>成果を決めるのは、<br>指示ではなく<span class="em">環境</span>である。</h1>
+  <p class="lede">Claude Codeを使い始めると、ある壁に当たります。「うまくいく日と、いかない日がある」。その差を生んでいるのはプロンプトの上手さではなく、CLAUDE.md・フォルダ構造・知識の置き場——つまり<b>環境設計</b>です。このガイドは、環境を「育てられる人」になるための実務指針をまとめたものです。</p>
+  <div class="forwho">
+    <b>想定している読者</b>
+    <ul>
+      <li>Claude Codeを数週間使っていて、CLAUDE.mdが何かは知っている</li>
+      <li>「もっと安定して良い結果を出したい」「毎回同じ説明をするのに疲れた」と感じている</li>
+      <li>フォルダやルールをどう整えるべきか、体系的な指針が欲しい</li>
+    </ul>
   </div>
 </div>
 
 <main>
 
-<!-- ================================================== 1. diff -->
-<section class="chapter" id="diff">
-  <span class="ch-label">CHAPTER 1</span>
-  <h2>今までのAIと、何が違うのか</h2>
-  <p class="ch-sub">いちばん大事な話から始めます。ここ数年でAIは「答える道具」から「働く相棒」に変わりました。</p>
+<!-- ================================================== 1 why -->
+<section class="chapter" id="why">
+  <div class="ch-head"><span class="no">01</span><h2>なぜ「環境設計」がすべてなのか</h2></div>
+  <p class="ch-sub">同じモデル・同じ指示でも、人によって結果がまるで違う。その理由から始めます。</p>
 
-  <div class="eras">
-    <div class="era">
-      <span class="e-when">むかし（〜2022年ごろ）</span>
-      <h4>検索・変換のAI</h4>
-      <span class="e-role">道具</span>
-      <p>調べたい言葉を入れると、関係ありそうなページを並べてくれる。翻訳する。それだけでも便利でした。</p>
-    </div>
-    <div class="era">
-      <span class="e-when">すこし前（2023年〜）</span>
-      <h4>チャットAI</h4>
-      <span class="e-role">相談相手</span>
-      <p>ChatGPTの登場で、質問すると文章で答えてくれるように。ただし<b>答えるだけ</b>。作業をするのはあなたでした。</p>
-    </div>
-    <div class="era now">
-      <span class="e-badge">いまはここ</span>
-      <span class="e-when">いま（2025年〜）</span>
-      <h4>働くAI</h4>
-      <span class="e-role">アシスタント</span>
-      <p>仕事を頼むと、<b>AIが自分で作業して、完成したものを持ってくる</b>ように。この「働くAI」を<span class="term" tabindex="0" data-term="AIエージェント">AIエージェント</span>と呼びます。</p>
-    </div>
-  </div>
+  <p>Claude Codeは、<span class="term" tabindex="0" data-term="セッション">セッション</span>が変わるたびに記憶ゼロの状態で「出社」してきます。前の会話も、あなたの好みも、プロジェクトの事情も覚えていません。毎回が初出勤です。</p>
+  <p>ここで2つの職場を想像してください。マニュアルも整理された書庫もなく、毎朝口頭で全部説明する職場。もう一方は、机の上に簡潔な指示書が置いてあり、書庫は整理され、よくある業務は手順書になっている職場。<b>同じ優秀な新人でも、成果は環境で決まります。</b>Claude Codeもまったく同じです。</p>
+  <p>プロンプト（その場の指示）は<b>1回きり</b>しか効きません。環境は<b>毎回、自動で</b>効きます。だから上達の投資先は、指示の言い回しではなく環境なのです。</p>
 
-  <h3>同じ仕事を頼むと、こんなに違う</h3>
-  <p>たとえば「お客様アンケート100件をまとめたい」とき。</p>
-
-  <div class="chatcmp">
-    <div class="chatpanel">
-      <div class="cp-head">今までのチャットAI</div>
-      <div class="cp-body">
-        <span class="bubble you"><span class="who">あなた</span>アンケートのまとめ方を教えて</span>
-        <span class="bubble ai"><span class="who">AI</span>手順は5つあります。まず回答を分類して、次に…</span>
-        <span class="bubble you"><span class="who">あなた</span>（なるほど…あとは自分でやるのか）</span>
-      </div>
-      <div class="cp-result bad">このあと、あなたが2時間作業する</div>
-    </div>
-    <div class="chatpanel now">
-      <div class="cp-head">いまの働くAI</div>
-      <div class="cp-body">
-        <span class="bubble you"><span class="who">あなた</span>このアンケート100件、読んでまとめて</span>
-        <span class="bubble act">AIが自分で読む → 分類する → 数える → 文章にする</span>
-        <span class="bubble ai"><span class="who">AI</span>できました。大きく3つの声がありました。1つ目は…</span>
-      </div>
-      <div class="cp-result good">あなたは、できたものを確認するだけ</div>
-    </div>
+  <h3>環境をつくる5つの要素</h3>
+  <p>このガイドで扱うのは次の5つ。それぞれが章に対応しています。</p>
+  <div class="cards c5">
+    <div class="card"><span class="c-no">2</span><h4>CLAUDE.md</h4><p>毎回必ず読まれる指示書。環境の心臓部。</p></div>
+    <div class="card"><span class="c-no">3</span><h4>フォルダ構造</h4><p>AIが世界を理解するための地図。</p></div>
+    <div class="card"><span class="c-no">4</span><h4>知識の置き場</h4><p>事実・状態・好みをどこに記録するか。</p></div>
+    <div class="card"><span class="c-no">5</span><h4>部品化</h4><p>定型業務をコマンドに固めて品質を安定させる。</p></div>
+    <div class="card"><span class="c-no">6</span><h4>権限とHooks</h4><p>「守ってほしい」を「必ず守られる」に変える安全装置。</p></div>
   </div>
 
   <div class="analogy">
     <span class="a-mark">たとえるなら</span>
-    <p>今までのAIは「<b>電話の向こうの相談員</b>」。やり方は教えてくれるけれど、手を動かすのはあなた。いまのAIは「<b>隣の席で働いてくれるアシスタント</b>」。頼めば、作業そのものをやってくれます。</p>
-  </div>
-
-  <h3>変わったことは、この3つ</h3>
-  <div class="cards c3">
-    <div class="card"><span class="c-no">1</span><h4>教えてくれる <span class="arrow">→</span> やってくれる</h4><p>「やり方の説明」ではなく「できあがったもの」が返ってきます。資料も、表も、文章も。</p></div>
-    <div class="card"><span class="c-no">2</span><h4>一問一答 <span class="arrow">→</span> 最後までやり切る</h4><p>途中でつまずいても、AIが自分で調べて、やり直して、完成まで粘ります。一往復では終わりません。</p></div>
-    <div class="card"><span class="c-no">3</span><h4>毎回忘れる <span class="arrow">→</span> 覚えてくれる</h4><p>「うちの会社ではこうして」と伝えたことをメモとして残せて、次からはそれを前提に働いてくれます。</p></div>
+    <p>環境設計とは「<b>AIという新入社員のための職場づくり</b>」です。指示書（CLAUDE.md）、整理された書庫（フォルダ）、業務台帳（ナレッジ）、手順書（コマンド）、決裁権限規程（パーミッション）。人間の組織で効くものは、AIにもそのまま効きます。</p>
   </div>
 
   <div class="takeaway">
-    <span class="tl">この章のまとめ</span>
+    <span class="tl">この章の要点</span>
     <ul>
-      <li>AIは「答える道具」から「<b>働くアシスタント</b>」に進化した</li>
-      <li>返ってくるのは説明ではなく<b>完成品</b></li>
-      <li>あなたの仕事は「作業」から「<b>頼んで、確認する</b>」に変わる</li>
+      <li>Claudeは毎セッション<b>記憶ゼロで出社</b>する。だから環境がすべて</li>
+      <li>プロンプトは1回きり、<b>環境は毎回効く</b>。投資対効果が違う</li>
+      <li>環境の5要素＝CLAUDE.md／フォルダ／知識の置き場／部品化／権限</li>
     </ul>
   </div>
 </section>
 
-<!-- ================================================== 2. can -->
-<section class="chapter" id="can">
-  <span class="ch-label">CHAPTER 2</span>
-  <h2>実際、どんな仕事を任せられるのか</h2>
-  <p class="ch-sub">プログラミングとは無縁の、ふつうの仕事の例です。どれも「日本語で頼むだけ」でできます。</p>
+<!-- ================================================== 2 claudemd -->
+<section class="chapter" id="claudemd">
+  <div class="ch-head"><span class="no">02</span><h2>CLAUDE.md設計の原則</h2></div>
+  <p class="ch-sub">環境の心臓部。「何を書くか」より先に「何を書かないか」を知ると、一気に安定します。</p>
 
-  <div class="examples">
-    <div class="ex">
-      <h4>アンケートや口コミの整理</h4>
-      <p class="ex-desc">回答100件を全部読んで、種類ごとに分けて、傾向を短くまとめてもらう。</p>
-      <div class="bar-row"><span class="bar-label">自分でやると</span><div class="bar slow"></div><span class="bar-time">2時間</span></div>
-      <div class="bar-row after"><span class="bar-label">AIに頼むと</span><div class="bar fast" style="width:12%"></div><span class="bar-time">約10分</span></div>
-    </div>
-    <div class="ex">
-      <h4>会議のあとの議事録づくり</h4>
-      <p class="ex-desc">録音の文字起こしを渡して、議事録と「誰が何をやるか」の一覧にしてもらう。</p>
-      <div class="bar-row"><span class="bar-label">自分でやると</span><div class="bar slow"></div><span class="bar-time">1時間</span></div>
-      <div class="bar-row after"><span class="bar-label">AIに頼むと</span><div class="bar fast" style="width:10%"></div><span class="bar-time">約5分</span></div>
-    </div>
-    <div class="ex">
-      <h4>他社や市場の調べもの</h4>
-      <p class="ex-desc">「同業10社の料金とサービス内容を調べて、比較表にして」まで一言で。</p>
-      <div class="bar-row"><span class="bar-label">自分でやると</span><div class="bar slow"></div><span class="bar-time">丸1日</span></div>
-      <div class="bar-row after"><span class="bar-label">AIに頼むと</span><div class="bar fast" style="width:8%"></div><span class="bar-time">約30分</span></div>
-    </div>
-    <div class="ex">
-      <h4>メール返信の下書き</h4>
-      <p class="ex-desc">もらったメールを見せて「丁寧にお断りする返事を書いて」。あなたは直して送るだけ。</p>
-      <div class="bar-row"><span class="bar-label">自分でやると</span><div class="bar slow"></div><span class="bar-time">1通15分</span></div>
-      <div class="bar-row after"><span class="bar-label">AIに頼むと</span><div class="bar fast" style="width:15%"></div><span class="bar-time">確認だけ</span></div>
-    </div>
-    <div class="ex">
-      <h4>散らかったファイルの整理</h4>
-      <p class="ex-desc">パソコンの中の書類を、種類ごと・日付ごとにフォルダ分けして名前も揃えてもらう。</p>
-      <div class="bar-row"><span class="bar-label">自分でやると</span><div class="bar slow"></div><span class="bar-time">半日</span></div>
-      <div class="bar-row after"><span class="bar-label">AIに頼むと</span><div class="bar fast" style="width:8%"></div><span class="bar-time">数分</span></div>
-    </div>
-    <div class="ex">
-      <h4>毎週・毎月の定型レポート</h4>
-      <p class="ex-desc">一度やり方を教えれば、次からは「先週分もお願い」の一言で同じ品質のものが出てくる。</p>
-      <div class="bar-row"><span class="bar-label">自分でやると</span><div class="bar slow"></div><span class="bar-time">毎回3時間</span></div>
-      <div class="bar-row after"><span class="bar-label">AIに頼むと</span><div class="bar fast" style="width:10%"></div><span class="bar-time">約15分</span></div>
-    </div>
-  </div>
+  <h3>まず、3階層の役割分担</h3>
+  <p>CLAUDE.mdは複数の場所に置けて、上から順に重ねて読み込まれます。それぞれ役割が違います。</p>
+  <div class="tblwrap"><table>
+    <tr><th>場所</th><th>効く範囲</th><th>書くべきもの</th></tr>
+    <tr><td class="mono">~/.claude/CLAUDE.md</td><td>すべてのプロジェクト</td><td>あなた個人の普遍ルール（言語・文体・確認の取り方・禁止事項）</td></tr>
+    <tr><td class="mono">プロジェクト/CLAUDE.md</td><td>そのプロジェクト全体</td><td>事業・プロジェクトの前提、フォルダの意味、保存先ルール</td></tr>
+    <tr><td class="mono">サブフォルダ/CLAUDE.md</td><td>そのフォルダでの作業</td><td>その案件・部門だけの固有ルール</td></tr>
+  </table></div>
+  <p>判断基準はシンプルで、「<b>このルールはどの範囲で守ってほしいか</b>」。全プロジェクト共通なら個人用へ、その現場だけならプロジェクトへ。置き場所を間違えると、関係ないプロジェクトにまでルールが漏れたり、必要な場所で効かなかったりします。</p>
 
-  <div class="note"><b>時間はあくまで目安です。</b>それでも共通するのは、あなたの役割が「作業する人」から「<b>確認する人</b>」に変わる、ということ。確認の時間は残ります。それでいいのです。</div>
-
-  <h3>あなたの仕事にも、ありませんか？</h3>
-  <p class="center" style="max-width:680px;margin-left:auto;margin-right:auto">当てはまるものにチェックを入れてみてください。</p>
-  <div class="aruaru" id="aruaru">
-    <label><input type="checkbox"><span>毎週・毎月、同じような資料やレポートを作っている</span></label>
-    <label><input type="checkbox"><span>メールの返信文を考えるのに、地味に時間を取られている</span></label>
-    <label><input type="checkbox"><span>長い資料や大量の文章を「読んでまとめる」仕事がある</span></label>
-    <label><input type="checkbox"><span>会議のあとの議事録・TODOの整理が面倒だと感じる</span></label>
-    <label><input type="checkbox"><span>他社・市場・お客様について調べる仕事がある</span></label>
-    <label><input type="checkbox"><span>数字の転記や集計を、手作業でやっている</span></label>
-    <label><input type="checkbox"><span>「これ、誰かに任せられたらなあ」と思う単純作業がある</span></label>
-  </div>
-  <div class="aruaru-result" id="aruaruResult">チェックを入れると、ここに結果が出ます</div>
-
-  <div class="takeaway">
-    <span class="tl">この章のまとめ</span>
-    <ul>
-      <li>「読む・書く・調べる・整理する・まとめる」仕事は、たいてい任せられる</li>
-      <li>目安は<b>「面倒くさいな」と感じた瞬間</b>。それがAIに頼むサイン</li>
-      <li>あなたの役割は「作業する人」から「<b>確認する人</b>」へ</li>
-    </ul>
-  </div>
-</section>
-
-<!-- ================================================== 3. fit -->
-<section class="chapter" id="fit">
-  <span class="ch-label">CHAPTER 3</span>
-  <h2>魔法ではありません — 得意なこと、苦手なこと</h2>
-  <p class="ch-sub">期待しすぎてがっかりしないために。AIの実力を正直にお伝えします。</p>
-
+  <h3>4つの原則</h3>
   <div class="cards c2">
-    <div class="card">
-      <h4 style="color:#2E6B34">得意なこと</h4>
-      <p>・大量の文章を読む、書く、まとめる<br>
-      ・下書きを素早く作る（メール、資料、企画のたたき台）<br>
-      ・調べものをして整理する<br>
-      ・同じ作業を何百回でも、飽きずに繰り返す<br>
-      ・24時間、嫌な顔ひとつしない</p>
-    </div>
-    <div class="card">
-      <h4 style="color:#A03325">苦手なこと・できないこと</h4>
-      <p>・最終判断をすること（決めるのはあなた）<br>
-      ・責任を取ること<br>
-      ・あなたの会社の内部事情（<b>教えるまで</b>知りません）<br>
-      ・ときどき、自信満々に間違えること（これを<span class="term" tabindex="0" data-term="ハルシネーション">AIの勘違い</span>と呼びます）</p>
-    </div>
+    <div class="card"><span class="c-tag">原則 1</span><h4>「指示」だけを書く。「状態」を書かない</h4><p>「〜PJは現在デザイン修正中」のような進捗・状態を書くと、終わったあとも毎回読み込まれて、<b>古い情報を最新として扱う事故</b>の温床になります。状態は専用の進捗メモへ（第4章）。CLAUDE.mdは賞味期限のないルールだけ。</p></div>
+    <div class="card"><span class="c-tag">原則 2</span><h4>短く、具体的に、箇条書きで</h4><p>「きれいに書いて」ではなく「見出しは2階層まで・語尾は敬体」。読んだClaudeが迷わない粒度まで具体化します。曖昧なルールは、無いのと同じです。</p></div>
+    <div class="card"><span class="c-tag">原則 3</span><h4>「するな」より「こうして」</h4><p>禁止だけ書くと、Claudeは代わりの正解を推測で選びます。「Excelを使うな」ではなく「表計算はGoogle Sheetsで作る（Excel禁止）」。正しい行き先までセットで示します。</p></div>
+    <div class="card"><span class="c-tag">原則 4</span><h4>肥大化したら「分離」する</h4><p>何でも足していくと数百行に膨らみ、大事なルールが埋もれます。目安は<b>200行</b>。超えてきたら詳細を別ファイル（rules/ など）に移し、本体には絶対ルールと<span class="term" tabindex="0" data-term="@import">@import（参照）</span>だけを残します。</p></div>
   </div>
 
-  <div class="analogy">
-    <span class="a-mark">たとえるなら</span>
-    <p>AIは「<b>ものすごく優秀だけど、入社初日の新人</b>」です。地頭は抜群。でも、あなたの会社のことはまだ何も知らないし、たまに知ったかぶりもする。だから合言葉は「<b>任せて、確認する</b>」。新人に任せた仕事を上司が確認するのと、まったく同じ感覚です。</p>
-  </div>
-
-  <p style="max-width:680px;margin-left:auto;margin-right:auto">大事なのは、間違えることを理由に使わないのではなく、<b>「間違えても大丈夫な形で任せる」</b>こと。下書きまで任せて最後は自分が見る。数字は元データと突き合わせる。それだけで、AIは安心して使える戦力になります。</p>
-
-  <div class="takeaway">
-    <span class="tl">この章のまとめ</span>
-    <ul>
-      <li>AIは<b>優秀な新人</b>。地頭は良いが、あなたの会社のことは知らない</li>
-      <li>たまに自信満々に間違える。だから<b>最後の確認は人間の仕事</b></li>
-      <li>合言葉は「<b>任せて、確認する</b>」</li>
-    </ul>
-  </div>
-</section>
-
-<!-- ================================================== 4. worry -->
-<section class="chapter" id="worry">
-  <span class="ch-label">CHAPTER 4</span>
-  <h2>よくある心配ごとに、お答えします</h2>
-  <p class="ch-sub">始める前に感じる不安は、だいたい共通しています。クリックして開いてみてください。</p>
-
-  <div class="qa">
-    <details>
-      <summary><span class="q">Q</span>プログラミングができないと、無理ですよね？</summary>
-      <div class="a"><p>いいえ。<b>日本語で話すだけ</b>です。「この資料を要約して」「もっと短く」「敬語にして」——ふだん人に頼むときの言葉が、そのまま指示になります。命令文の書き方を勉強する必要はありません。</p></div>
-    </details>
-    <details>
-      <summary><span class="q">Q</span>パソコンが苦手なんですが……</summary>
-      <div class="a"><p>チャットアプリ（LINEなど）で文章が打てれば大丈夫です。いまのAIは、話しかける画面そのものがチャットの形をしています。特別な操作は要りません。</p></div>
-    </details>
-    <details>
-      <summary><span class="q">Q</span>変なことをして、何かを壊してしまいそうで怖い</summary>
-      <div class="a"><p>働くタイプのAIは、大事な操作（ファイルを消す、メールを送る等）の前に<b>必ず「やっていいですか？」と確認してきます</b>。勝手に送信したり、勝手に消したりしません。しかも「これは絶対に確認して」「これは禁止」といったルールを最初に決めておけます。新人に決裁権限のルールを決めるのと同じです。</p></div>
-    </details>
-    <details>
-      <summary><span class="q">Q</span>何を頼めばいいのか、思いつきません</summary>
-      <div class="a"><p>仕事中に「<b>面倒くさいな</b>」と感じた瞬間がサインです。その場でその気持ちをそのまま伝えてください。「毎週この集計をするのが面倒」——それで通じます。頼み方が下手でも、AIのほうから「それはこういうことですか？」と聞き返してくれます。</p></div>
-    </details>
-    <details>
-      <summary><span class="q">Q</span>間違ったものが出てきたら困ります</summary>
-      <div class="a"><p>出てきます、たまに。だから「<b>下書きまで任せて、最後は自分が確認する</b>」が基本の型です。それでも、ゼロから自分で作るより圧倒的に速い。間違いを見つけたら「ここが違う」と言えば、すぐ直してくれます。</p></div>
-    </details>
-    <details>
-      <summary><span class="q">Q</span>お金はどれくらいかかりますか？</summary>
-      <div class="a"><p>無料で試せるものが多く、しっかり使っても月数千円のプランから始められます。1日30分でも作業が減るなら、十分に元が取れる計算です。まずは無料で「相談相手」として試すのがおすすめです。</p></div>
-    </details>
-    <details>
-      <summary><span class="q">Q</span>会社の情報を入れて大丈夫？</summary>
-      <div class="a"><p>ここは慎重さが必要な、まっとうな心配です。有料プランの多くは「入力内容をAIの学習に使わない」設定ができます。お客様の個人情報や社外秘は、会社のルールを確認してから。<b>最初は機密でない仕事から</b>始めれば安心です。</p></div>
-    </details>
-  </div>
-
-  <div class="takeaway">
-    <span class="tl">この章のまとめ</span>
-    <ul>
-      <li>必要なのはプログラミングではなく、<b>チャットが打てること</b>だけ</li>
-      <li>働くAIは大事な操作の前に<b>必ず確認してくる</b>。勝手に暴走しない</li>
-      <li>最初は「間違えても困らない仕事」「機密でない仕事」から</li>
-    </ul>
-  </div>
-</section>
-
-<!-- ================================================== 5. howto -->
-<section class="chapter" id="howto">
-  <span class="ch-label">CHAPTER 5</span>
-  <h2>上手な頼み方は、たった3つ</h2>
-  <p class="ch-sub">テクニックは要りません。「新人に仕事を頼むときのコツ」と同じです。</p>
-
-  <h3>コツ1：新人さんに頼むように、少しだけ具体的に</h3>
+  <h3>悪い例と良い例</h3>
   <div class="gb">
-    <div class="b"><span class="tag">伝わりにくい</span><span class="say">「いい感じの資料にして」</span><p>何をもって「いい感じ」なのか、AIも新人も分かりません。それでも聞き返してはくれますが、遠回りになります。</p></div>
-    <div class="g"><span class="tag">伝わる</span><span class="say">「社内向けの報告資料にして。A4一枚、箇条書き中心で」</span><p>誰が読むか・どんな形か・分量。この3つがあると、一発で近いものが出てきます。</p></div>
+    <div class="b">
+      <div class="gb-head">ありがちなCLAUDE.md（伸び悩む）</div>
+      <div class="gb-body">
+<pre># メモ
+・このプロジェクトはLPのリニューアル中。
+  いまはヒーローセクションを直している（6/10）
+・ちゃんとした文章で書くこと
+・前に頼んだ資料のフォーマット、
+  ああいう感じでお願いします
+・エラーが出たときの対処法メモ：（40行続く…）</pre>
+        <p class="why">進捗（すぐ古くなる）・曖昧な指示（「ちゃんとした」）・会話の文脈依存（「ああいう感じ」）・長大なメモが混在。毎回読み込まれるのに、毎回役に立たない。</p>
+      </div>
+    </div>
+    <div class="g">
+      <div class="gb-head">設計されたCLAUDE.md（安定する）</div>
+      <div class="gb-body">
+<pre># このプロジェクト
+飲食店向けLP制作。読者は店舗オーナー。
+
+# ルール
+- 文体：敬体。1文は60字以内
+- 表はGoogle Sheets（Excel禁止）
+- 生成物は output/ に保存
+- 削除の前は必ず確認を取る
+
+# 詳細ルール（必要時に参照）
+@rules/writing-style.md
+@rules/design-tokens.md</pre>
+        <p class="why">前提→ルール→参照の3ブロック。すべて賞味期限のない指示。詳細は分離してあり、本体は1分で読み切れる。</p>
+      </div>
+    </div>
   </div>
-  <p style="max-width:680px;margin-left:auto;margin-right:auto">とはいえ、最初から上手に頼めなくて大丈夫。<b>雑に話しかけても、AIのほうから質問してくれます</b>。まず話しかけることがいちばん大事です。</p>
 
-  <h3>コツ2：一発で完璧を求めない。「6割→会話で仕上げる」</h3>
-  <p style="max-width:680px;margin-left:auto;margin-right:auto">最初に出てくるのは6〜8割の出来だと思ってください。そこから「もっと短く」「2番目の項目をくわしく」「やわらかい言い方に」と<b>会話で直していく</b>のが正しい使い方です。部下の初稿に赤を入れるのと同じ。3往復もすれば、たいてい形になります。</p>
-
-  <h3>コツ3：気に入ったら「覚えておいて」と言う</h3>
-  <p style="max-width:680px;margin-left:auto;margin-right:auto">「この形式、今後もこれでお願い」「うちの社名の表記はこれで統一して」——そう伝えると、AIはメモを残して、<b>次からはそれを前提に</b>働いてくれます。使えば使うほど、あなた専用のアシスタントに育っていきます。</p>
+  <div class="note"><b>育て方のコツ：</b>CLAUDE.mdは最初に完璧を目指すものではなく、<b>運用しながら1行ずつ足す</b>ものです。Claudeが期待と違う動きをしたら、その場で「これはルール化すべきか？」と考える。この習慣が数週間で大きな差になります（第4章の育成ループ）。</div>
 
   <div class="takeaway">
-    <span class="tl">この章のまとめ</span>
+    <span class="tl">この章の要点</span>
     <ul>
-      <li>「誰が読む・どんな形・どのくらい」を添えると一発で伝わる</li>
-      <li>最初の出来は6割でいい。<b>会話で仕上げる</b></li>
-      <li>気に入ったやり方は「<b>覚えておいて</b>」で、どんどん育つ</li>
+      <li>3階層の役割分担：<b>個人の普遍ルール／現場の前提／案件の固有ルール</b></li>
+      <li>書くのは指示だけ。<b>進捗・状態は書かない</b>（陳腐化の最大要因）</li>
+      <li>具体的に・「するな」より「こうして」・200行を超えたら分離</li>
     </ul>
   </div>
 </section>
 
-<!-- ================================================== 6. start -->
-<section class="chapter" id="start">
-  <span class="ch-label">CHAPTER 6</span>
-  <h2>最初の一歩は、今日踏めます</h2>
-  <p class="ch-sub">準備も勉強も要りません。この3ステップだけです。</p>
+<!-- ================================================== 3 folders -->
+<section class="chapter" id="folders">
+  <div class="ch-head"><span class="no">03</span><h2>フォルダ構造の最適化</h2></div>
+  <p class="ch-sub">Claudeはフォルダ名とファイル名で世界を理解します。地図が正確なら、探索は速く、事故は減る。</p>
 
-  <div class="steps">
-    <div class="step">
-      <div class="s-rail"><span class="s-no">1</span><span class="s-line"></span></div>
-      <div class="s-body">
-        <h4>「面倒くさい仕事」を1つ思い浮かべる</h4>
-        <p>大きな仕事でなくていいのです。毎週の報告、メールの返信、資料の要約。「これ、地味に時間取られてるな」というものを1つだけ。</p>
+  <h3>AIは「名前」で理解する</h3>
+  <p>Claudeが作業を始めるとき、最初にやるのはフォルダとファイルの一覧を眺めることです。つまり<b>フォルダ名・ファイル名が、そのままAIへの説明文</b>になります。「新しいフォルダ(2)」「その他」「aaa.md」が並んだ環境では、優秀なAIでも迷子になります。これは人間の新人と完全に同じです。</p>
+
+  <h3>基本形は3つだけ</h3>
+  <div class="cards c3">
+    <div class="card"><span class="c-tag">基本 1</span><h4>1テーマ＝1フォルダ</h4><p>事業・プロジェクトごとに独立したフォルダを切り、混ぜない。境界が明確だと、CLAUDE.mdもナレッジもそのフォルダに紐づけられます。</p></div>
+    <div class="card"><span class="c-tag">基本 2</span><h4>番号つきサブフォルダ</h4><p><code class="inline">01_契約/</code> <code class="inline">02_顧客管理/</code> のように番号＋役割名で並べると、構造が一覧で伝わり、Claudeへの「ここに何があるか」の説明が不要になります。</p></div>
+    <div class="card"><span class="c-tag">基本 3</span><h4>生成物はoutput/に分離</h4><p>AIが作るファイルの置き場を1つに決める。資料の原本と生成物が混ざらず、「消していいもの」の判断も安全になります。</p></div>
+  </div>
+
+  <h3>ビフォー / アフター</h3>
+  <div class="gb">
+    <div class="b">
+      <div class="gb-head">Before：AIが迷う構造</div>
+      <div class="gb-body">
+<pre>デスクトップ/
+├── 新しいフォルダ/
+├── 新しいフォルダ(2)/
+├── 請求書_最新_これ使う.xlsx
+├── 請求書_最新2.xlsx
+├── メモ.txt
+├── A社資料/（B社の資料も入っている）
+└── いろいろ/</pre>
+        <p class="why">どれが正か分からない重複、名前と中身の不一致。Claudeは推測で動くしかなく、推測は事故のもと。</p>
       </div>
     </div>
-    <div class="step">
-      <div class="s-rail"><span class="s-no">2</span><span class="s-line"></span></div>
-      <div class="s-body">
-        <h4>AI（ClaudeやChatGPT）を開いて、そのまま話しかける</h4>
-        <p>ブラウザで開くだけ。登録は数分、無料で始められます。かしこまった文章は不要です。</p>
-        <span class="s-say">「毎週、部署の売上を上司向けにまとめてるんだけど、これって手伝ってもらえる？」</span>
-      </div>
-    </div>
-    <div class="step">
-      <div class="s-rail"><span class="s-no">3</span><span class="s-line"></span></div>
-      <div class="s-body">
-        <h4>出てきたものに、感想を言って直してもらう</h4>
-        <p>「もっと短く」「この言い方は変えて」。2〜3回のやり取りで、思ったより使えるものになります。ここまでで、たぶん15分。<b>壊れるものは何もありません。</b></p>
+    <div class="g">
+      <div class="gb-head">After：AIが迷わない構造</div>
+      <div class="gb-body">
+<pre>仕事/
+├── A社プロジェクト/
+│   ├── CLAUDE.md   ← この現場のルール
+│   ├── 01_契約/
+│   ├── 02_資料/
+│   ├── 03_議事録/
+│   └── output/     ← 生成物はここ
+└── B社プロジェクト/
+    ├── CLAUDE.md
+    └── …</pre>
+        <p class="why">名前を読むだけで構造が分かる。正本の場所が一意。Claudeへの説明コストがほぼゼロになる。</p>
       </div>
     </div>
   </div>
 
-  <div class="note"><b>その先の世界：</b>チャットでの相談に慣れて、「ファイルの整理や毎週の定型作業まで丸ごと任せたい」と思ったら、そこで初めて「働くAI」（Claude Codeなど）の出番です。順番に階段を登れば、難しいことは何もありません。</div>
+  <h3>「どこで起動するか」も設計のうち</h3>
+  <p>Claude Codeは<b>起動したフォルダを仕事場</b>とみなし、そこのCLAUDE.mdを読み込みます。つまり起動場所の選択は「今日はどの職場に出社してもらうか」の選択です。</p>
+  <ul class="plain">
+    <li><b>A社の作業だけする日</b> → <code class="inline">A社プロジェクト/</code> で起動。A社のルールと文脈だけが読み込まれ、集中力が上がる</li>
+    <li><b>複数プロジェクトを横断する作業</b> → 親フォルダ（<code class="inline">仕事/</code>）で起動。全体を見渡せる代わりに、文脈は薄くなる</li>
+  </ul>
+  <p>「深く潜って起動すれば専門家、浅く起動すれば横断役」。この使い分けを覚えると、同じ環境でも精度が変わります。</p>
 
   <div class="takeaway">
-    <span class="tl">この章のまとめ</span>
+    <span class="tl">この章の要点</span>
     <ul>
-      <li>始めるのに必要なもの：<b>面倒な仕事1つ＋15分</b></li>
-      <li>最初の一言は「これって手伝ってもらえる？」でいい</li>
-      <li>失敗しても、壊れるものは何もない</li>
+      <li>フォルダ名・ファイル名は<b>AIへの説明文</b>。名前で分かる構造にする</li>
+      <li>基本形：1テーマ1フォルダ／番号つきサブフォルダ／output/分離</li>
+      <li><b>起動場所＝出社先</b>。専門作業は深く、横断作業は浅く起動する</li>
     </ul>
   </div>
 </section>
 
-<!-- ================================================== 7. words -->
-<section class="chapter" id="words">
-  <span class="ch-label">CHAPTER 7</span>
-  <h2>ことば辞典 — これだけ知っていれば十分</h2>
-  <p class="ch-sub">AIの話題についていくのに必要な言葉は、実はこの8つくらいです。</p>
-  <div id="gbody"></div>
+<!-- ================================================== 4 knowledge -->
+<section class="chapter" id="knowledge">
+  <div class="ch-head"><span class="no">04</span><h2>知識をどこに置くか — 記憶の設計</h2></div>
+  <p class="ch-sub">「全部CLAUDE.mdに書く」が破綻する理由と、知識を4つに書き分ける考え方。</p>
+
+  <p>使い込むほど、残したい知識は増えていきます。ルール、決まった仕様、顧客の事情、今の進捗、あなたの好み。これを全部CLAUDE.mdに入れると、肥大化と陳腐化で崩壊します。<b>知識は寿命と用途が違うものを、別の場所に置く</b>のが原則です。</p>
+
+  <h3>4つの置き場所</h3>
+  <div class="tblwrap"><table>
+    <tr><th>置き場所</th><th>入れるもの</th><th>寿命</th><th>例</th></tr>
+    <tr><td><b>CLAUDE.md</b></td><td>毎回守らせたい「指示・ルール」</td><td>ほぼ永続</td><td>「表はGoogle Sheetsで」「削除前は確認」</td></tr>
+    <tr><td><b>ナレッジファイル</b><br><span style="font-size:.78rem;color:var(--muted)">（例：KNOWLEDGE.md）</span></td><td>確定した「事実」の台帳</td><td>長い（訂正あり）</td><td>用語の定義、決定事項、仕様、注意点</td></tr>
+    <tr><td><b>進捗メモ</b><br><span style="font-size:.78rem;color:var(--muted)">（例：00_進捗.md）</span></td><td>「いまの状態」と次の一手</td><td>短い（毎回更新）</td><td>「デザイン修正まで完了。次はフォーム実装」</td></tr>
+    <tr><td><b>AIの自動メモリ</b></td><td>あなたの「好み」・横断的な行動修正</td><td>長い</td><td>「絵文字は使わない」「推奨案で進めてほしい」</td></tr>
+  </table></div>
+  <p>覚え方は「<b>ルールはCLAUDE.md、事実は台帳、状態は進捗メモ、好みはメモリ</b>」。どこに書くか3秒で判断できるようになれば、環境は散らかりません。</p>
+
+  <h3>陳腐化と戦う3原則</h3>
+  <p>環境設計の最大の敵は、古い情報です。古いルールや状態が残っていると、Claudeはそれを「現在の真実」として扱ってしまいます。</p>
+  <ul class="plain">
+    <li><b>状態は一箇所にだけ書く</b> — 同じプロジェクトの進捗を複数のファイルに書くと、必ず食い違いが生まれます。正本を1つ決める</li>
+    <li><b>変わったら追記ではなく上書き</b> — 「※6/20訂正：上記は旧仕様」と追記する方式は、古い記述が残り続けます。行そのものを書き換える</li>
+    <li><b>CLAUDE.mdに状態を書かない</b> — 第2章の原則1。毎回読み込まれる場所に置いた古い状態は、最も害が大きい</li>
+  </ul>
+
+  <h3>環境を育てる「失敗→ルール化」ループ</h3>
+  <p>知識の置き場が決まると、環境を育てる型ができます。</p>
+  <div class="cyclewrap">
+    <div class="cycle">
+      <div class="cstep"><span class="ct">失敗が起きる</span><span class="cd">期待と違う動き・誤解・事故</span></div>
+      <div class="carr">&#8594;</div>
+      <div class="cstep"><span class="ct">原因を言語化</span><span class="cd">何を知らなかったから起きた？</span></div>
+      <div class="carr">&#8594;</div>
+      <div class="cstep hot"><span class="ct">1行ルール化</span><span class="cd">CLAUDE.md か台帳に追記</span></div>
+      <div class="carr">&#8594;</div>
+      <div class="cstep"><span class="ct">同じ失敗が消える</span><span class="cd">次のセッションから自動で効く</span></div>
+    </div>
+    <div class="cycle-note">AIを叱っても次のセッションには忘れている。ファイルを直せば、二度と忘れない。</div>
+  </div>
+  <p>このループを回している人と回していない人の環境は、1か月で別物になります。Claude Codeが「使うたびに賢くなる」ように感じられたら、環境設計が機能している証拠です。</p>
+
+  <div class="takeaway">
+    <span class="tl">この章の要点</span>
+    <ul>
+      <li>知識は4つに書き分ける：<b>ルール／事実／状態／好み</b></li>
+      <li>陳腐化対策：状態は一箇所・<b>追記でなく上書き</b>・CLAUDE.mdに状態を書かない</li>
+      <li>失敗したらAIを叱らず<b>ファイルを直す</b>。これが環境を育てる唯一のループ</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================== 5 commands -->
+<section class="chapter" id="commands">
+  <div class="ch-head"><span class="no">05</span><h2>定型業務の部品化 — コマンドとスキル</h2></div>
+  <p class="ch-sub">「毎回うまく頼めるか」に賭けるのをやめて、うまい頼み方をファイルに封じ込める。</p>
+
+  <h3>サインは「同じ説明を3回」</h3>
+  <p>週報の作成、議事録の整形、リサーチのまとめ方——同じ趣旨の指示を3回出したら、それは部品化のサインです。<code class="inline">.claude/commands/</code> フォルダに手順を書いたMarkdownファイルを置くだけで、自作の<span class="term" tabindex="0" data-term="スラッシュコマンド">スラッシュコマンド</span>になります。</p>
+
+  <div class="codebox"><div class="cb-title">.claude/commands/weekly-report.md　→　「/weekly-report」で呼べる</div><pre>今週の週報を作成してください。
+
+手順:
+1. 03_議事録/ の今週分を読む
+2. 「完了・進行中・課題」の3部構成で要約する
+3. output/ に「YYYY-MM-DD_週報.md」として保存する
+
+文体: 敬体。全体でA4半分以内。</pre></div>
+
+  <p>ポイントは、これが単なる時短ではないことです。部品化には3つの効果があります。</p>
+  <div class="cards c3">
+    <div class="card"><span class="c-tag teal">効果 1</span><h4>品質が揺れない</h4><p>頼み方の出来不出来に左右されず、毎回同じ水準の結果になる。「今日はうまく伝わらなかった」が消えます。</p></div>
+    <div class="card"><span class="c-tag teal">効果 2</span><h4>改善が蓄積する</h4><p>結果が気に入らなければコマンドのファイルを直す。直した分は次回から必ず効く。頼み方が資産になります。</p></div>
+    <div class="card"><span class="c-tag teal">効果 3</span><h4>人に渡せる</h4><p>プロジェクトのフォルダに置けばチームの共有財産に。あなたの「うまい頼み方」を他の人もそのまま使えます。</p></div>
+  </div>
+
+  <div class="note"><b>スキルとの関係：</b>コマンドをさらに発展させて、手順書＋参考資料＋テンプレートを1つのフォルダにまとめたものが「スキル」です。まずはコマンド化から始めて、付属資料が必要になったらスキルに育てる、という順番で十分です。</div>
+
+  <div class="takeaway">
+    <span class="tl">この章の要点</span>
+    <ul>
+      <li><b>同じ説明を3回したら部品化</b>のサイン</li>
+      <li>コマンド化は時短ではなく<b>品質の安定装置</b>。頼み方が資産になる</li>
+      <li>コマンド → 資料つきのスキルへ、必要になってから育てる</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================== 6 guard -->
+<section class="chapter" id="guard">
+  <div class="ch-head"><span class="no">06</span><h2>権限とHooksで「守らせる」</h2></div>
+  <p class="ch-sub">CLAUDE.mdは「お願い」。守られる確率は高いが、100%ではない。絶対に守らせたいことは仕組みにする。</p>
+
+  <h3>権限設計＝決裁権限規程</h3>
+  <p>Claude Codeは操作ごとに許可を求めてきますが、毎回確認に答えるのは現実的ではありません。そこで<b>allow（自動で実行してよい）／ask（毎回確認）／deny（禁止）</b>の3段階を事前に設計します。新入社員の決裁権限を決めるのと同じ発想です。</p>
+  <div class="tblwrap"><table>
+    <tr><th>段階</th><th>割り当てるもの</th><th>考え方</th></tr>
+    <tr><td><span class="lv ok">allow</span></td><td>読み取り・検索・output/への保存など</td><td>失敗してもやり直せる操作は自動化してテンポを守る</td></tr>
+    <tr><td><span class="lv ask">ask</span></td><td>外部への送信・機密ファイルへのアクセス</td><td>影響が外に出る操作は、人間の目を1回はさむ</td></tr>
+    <tr><td><span class="lv no">deny</span></td><td>メール送信・強制削除・認証情報の読み取り</td><td>取り返しがつかない操作は、そもそも実行不能にする</td></tr>
+  </table></div>
+  <p>設計の軸は「<b>危険なもの以外は自動承認、取り返しのつかないものだけ確認か禁止</b>」。全部確認にすると遅くて使わなくなり、全部自動にすると事故が起きます。この中間を意図して設計します。</p>
+
+  <h3>お願い（CLAUDE.md）と強制（Hooks）の使い分け</h3>
+  <p>CLAUDE.mdに「削除の前は確認して」と書けば、ほぼ守られます。しかしAIの判断を経由する以上、100%の保証はありません。そこで<span class="term" tabindex="0" data-term="Hooks">Hooks（フック）</span>——決まったタイミングで<b>必ず</b>実行される自動処理——の出番です。</p>
+  <div class="gb">
+    <div class="b">
+      <div class="gb-head">CLAUDE.mdに書く（お願い）</div>
+      <div class="gb-body">
+        <p>「ファイルを消すときはゴミ箱経由にしてください」</p>
+        <p class="why">ほとんどの場面で守られる。ただしAIが文脈を誤解すれば、すり抜ける可能性はゼロではない。</p>
+      </div>
+    </div>
+    <div class="g">
+      <div class="gb-head">Hooksで仕組みにする（強制）</div>
+      <div class="gb-body">
+        <p>削除コマンドを検知したら、実行直前に<b>自動でゴミ箱行きコマンドへ置き換える</b>処理を仕込む</p>
+        <p class="why">AIの判断を経由しないため、例外なく実行される。「うっかり」が構造的に起きない。</p>
+      </div>
+    </div>
+  </div>
+  <p>使い分けの基準は損害の大きさです。<b>破られても困らないルールはCLAUDE.mdへ、破られたら取り返しがつかないルールはHooksと権限（deny）へ。</b>この二段構えができると、安心して大きな仕事を任せられるようになります。</p>
+
+  <div class="takeaway">
+    <span class="tl">この章の要点</span>
+    <ul>
+      <li>権限は<b>決裁権限規程</b>：allow／ask／denyを事前に設計する</li>
+      <li>軸は「危険なもの以外は自動、<b>取り返しのつかないものだけ確認・禁止</b>」</li>
+      <li>CLAUDE.md＝お願い、Hooks＝強制。<b>損害の大きさで使い分ける</b></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================== 7 session -->
+<section class="chapter" id="session">
+  <div class="ch-head"><span class="no">07</span><h2>セッション運用術</h2></div>
+  <p class="ch-sub">環境が整っても、セッションの使い方が雑だと精度は落ちます。日々の運用の3つの規律。</p>
+
+  <h3>規律1：1仕事1セッション</h3>
+  <p>Claudeの<span class="term" tabindex="0" data-term="コンテキスト">コンテキスト</span>（作業机）には、会話のすべてが載っています。A社の仕事が終わった机の上でB社の仕事を始めると、無関係な文脈が判断を濁らせます。<b>仕事の区切りで <code class="inline">/clear</code>（会話のリセット）</b>。これだけで精度のブレがかなり消えます。</p>
+
+  <h3>規律2：セッションをまたぐ仕事は「引き継ぎメモ」を書かせる</h3>
+  <p>大きな仕事は1セッションで終わりません。そして次のセッションのClaudeは、今日の作業を何も覚えていません。終える前に「<b>進捗と次の一手を進捗メモに書いて</b>」と頼む習慣をつけると、翌日のClaudeがメモを読んでそのまま続きから走れます。第4章の「進捗メモ」はこのためにあります。</p>
+
+  <h3>規律3：大きな作業はプランモードから</h3>
+  <p>いきなり実行させると、方向違いの作業が数十分進んでしまうことがあります。<span class="term" tabindex="0" data-term="プランモード">プランモード</span>（読み取り専用で計画だけ立てるモード）でまず計画を出させ、<b>合意してから実行</b>。手戻りが減り、意図しない変更も起きません。「大工事の前に見積もりと図面を確認する」のと同じです。</p>
+
+  <div class="note"><b>コンテキストが苦しくなったら：</b>長い作業の途中で反応が鈍く感じたら、<code class="inline">/compact</code>（要約して圧縮）で机を片付けられます。ただし本質的な対策は、仕事を区切って規律1・2を守ることです。</div>
+
+  <div class="takeaway">
+    <span class="tl">この章の要点</span>
+    <ul>
+      <li><b>1仕事1セッション</b>。区切りで /clear</li>
+      <li>またぐ仕事は<b>引き継ぎメモを書かせてから</b>終える</li>
+      <li>大きな作業は<b>プランモードで合意してから</b>実行</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================== 8 check -->
+<section class="chapter" id="check">
+  <div class="ch-head"><span class="no">08</span><h2>環境の健康診断 — 15項目セルフチェック</h2></div>
+  <p class="ch-sub">いまのあなたの環境を採点しましょう。チェックがつかなかった項目が、次に手を入れる場所です。</p>
+
+  <div class="check-progress">
+    <div class="bar"><div class="fill" id="ckfill"></div></div>
+    <div class="ct" id="ckcount">0 / 15</div>
+  </div>
+
+  <div class="ckgroup"><h4>CLAUDE.md（第2章）</h4>
+    <ul class="checklist ck">
+      <li><label><input type="checkbox"><span>プロジェクトのルートにCLAUDE.mdを置いている</span></label></li>
+      <li><label><input type="checkbox"><span>CLAUDE.mdに進捗・状態を書いていない（ルールだけになっている）</span></label></li>
+      <li><label><input type="checkbox"><span>ルールが具体的で、読んだ人（AI）が迷わない粒度になっている</span></label></li>
+      <li><label><input type="checkbox"><span>本体が長くなりすぎていない（目安200行以内。超える分は分離）</span></label></li>
+    </ul>
+  </div>
+  <div class="ckgroup"><h4>フォルダ構造（第3章）</h4>
+    <ul class="checklist ck">
+      <li><label><input type="checkbox"><span>1テーマ（事業・プロジェクト）＝1フォルダになっている</span></label></li>
+      <li><label><input type="checkbox"><span>フォルダ名・ファイル名を見れば中身が分かる</span></label></li>
+      <li><label><input type="checkbox"><span>AIの生成物の置き場（output/ など）が決まっている</span></label></li>
+      <li><label><input type="checkbox"><span>作業内容に合わせて起動フォルダを使い分けている</span></label></li>
+    </ul>
+  </div>
+  <div class="ckgroup"><h4>知識の置き場（第4章）</h4>
+    <ul class="checklist ck">
+      <li><label><input type="checkbox"><span>確定した事実を書きためる台帳ファイルがある</span></label></li>
+      <li><label><input type="checkbox"><span>進行中の状態は専用の進捗メモにあり、正本が一箇所に決まっている</span></label></li>
+      <li><label><input type="checkbox"><span>失敗が起きたら、原因をルール化してファイルに残す習慣がある</span></label></li>
+    </ul>
+  </div>
+  <div class="ckgroup"><h4>部品化・権限・運用（第5〜7章）</h4>
+    <ul class="checklist ck">
+      <li><label><input type="checkbox"><span>3回以上くり返した指示を、コマンド（またはスキル）にしている</span></label></li>
+      <li><label><input type="checkbox"><span>取り返しのつかない操作（送信・削除など）に確認または禁止を設定している</span></label></li>
+      <li><label><input type="checkbox"><span>仕事の区切りで /clear している（1仕事1セッション）</span></label></li>
+      <li><label><input type="checkbox"><span>大きな作業はプランモード（計画→合意→実行）で始めている</span></label></li>
+    </ul>
+  </div>
+
+  <div class="ck-verdict" id="ckverdict">チェックを入れると、ここに診断結果が出ます</div>
 </section>
 
 <div class="closing">
-  <h2>あなたの1週間にも、<br>AIに任せられる<span class="em">「2時間」</span>が眠っています。</h2>
-  <p>それを見つけて、最初のひとつを任せてみる。うまくいったら、もうひとつ。この繰り返しの先に、「作業に追われない働き方」があります。難しい理屈は、あとからで大丈夫。今日の「面倒くさい」から始めましょう。</p>
+  <h2>環境は、一晩では完成しない。<br>でも<span class="em">1日1行</span>なら、今日から育てられる。</h2>
+  <p>Claudeが期待と違う動きをした日こそチャンスです。叱る代わりに、CLAUDE.mdか台帳に1行足す。その1行は明日も、来月も、自動で効き続けます。指示がうまい人より、環境を育てられる人が、最終的にいちばん遠くまで行きます。</p>
 </div>
 
 </main>
@@ -598,36 +643,20 @@ footer.site .fbrand{font-weight:800;color:var(--ink);margin-bottom:4px}
 <div id="tooltip" role="tooltip"></div>
 
 <footer class="site">
-  <div class="fbrand">はじめてのAI</div>
-  <div>いまのAIは、ここまでやってくれる ・ 2026年7月版</div>
+  <div class="fbrand">Claude Code 環境設計ガイド</div>
+  <div>指示より、環境。 ・ 2026年7月版</div>
 </footer>
 
 <script>
-/* ============ ことば辞典（ツールチップと共用） ============ */
+/* ============ 用語ツールチップ ============ */
 var GLOSSARY = {
-  "AI": {yomi:"エーアイ", def:"人工知能のこと。人間がやるような「考える仕事」をこなすコンピュータの技術ぜんぶをまとめた呼び名です。"},
-  "生成AI": {yomi:"せいせいエーアイ", def:"文章や画像を「新しく作り出す」タイプのAI。ここ数年で話題になっているAIは、ほぼこれを指します。"},
-  "チャットAI": {yomi:"チャットエーアイ", def:"会話の形で質問に答えてくれるAI。ChatGPTやClaudeなど。「相談相手」タイプのAIです。"},
-  "AIエージェント": {yomi:"エージェント", def:"「働くAI」のこと。頼んだ仕事を、自分で段取りして最後までやってくれるタイプのAI。このページの主役です。"},
-  "Claude": {yomi:"クロード", def:"Anthropic（アンソロピック）という会社のAI。文章の自然さと、仕事を任せたときの丁寧さに定評があります。"},
-  "ChatGPT": {yomi:"チャットジーピーティー", def:"OpenAI（オープンエーアイ）という会社のAI。2023年にAIブームの火付け役になった、いちばん有名なチャットAIです。"},
-  "プロンプト": {yomi:"prompt", def:"AIへの頼み方・指示文のこと。「この資料を要約して」という一言も立派なプロンプトです。特別な書き方は必要ありません。"},
-  "ハルシネーション": {yomi:"AIの勘違い", def:"AIが、事実ではないことを自信満々に答えてしまうこと。だから大事な数字や名前は、最後に人間が確認します。"},
-  "点線のことば": {yomi:"このページの仕組み", def:"こうして意味が表示されます。本文中の点線つきの言葉は、すべてこの形で説明が読めます。"}
+  "セッション": {yomi:"session", def:"Claude Codeとの1回の作業のまとまり。起動（または /clear）から終了まで。セッションが変わると会話の記憶はゼロに戻ります。だからファイルに残した環境だけが引き継がれます。"},
+  "@import": {yomi:"参照の仕組み", def:"CLAUDE.mdの中に「@ファイルパス」と書くと、そのファイルの内容を読み込ませられる仕組み。詳細ルールを別ファイルに分離しつつ、必要なときに参照させるために使います。"},
+  "スラッシュコマンド": {yomi:"slash command", def:"チャット欄で「/」から始めて使う短縮命令。組み込みのもの（/clear など）のほか、.claude/commands/ にMarkdownを置くだけで自作できます。"},
+  "Hooks": {yomi:"フック", def:"Claude Codeの動作の節目（操作の直前・直後・応答完了時など）に、あらかじめ決めた処理を必ず自動実行させる仕組み。AIの判断を経由しないため、例外なく実行されます。"},
+  "コンテキスト": {yomi:"context", def:"Claudeがいま「見えている」情報の総量。会話・読んだファイル・作業結果がすべて載る作業机のようなもの。広さに上限があり、無関係な情報が多いほど判断が濁ります。"},
+  "プランモード": {yomi:"plan mode", def:"ファイルを一切変更しない読み取り専用モード。調査と計画立案だけを行わせ、計画に合意してから実行に移れます。大きな作業の手戻り防止に使います。"}
 };
-
-/* 辞典の描画（「点線のことば」はページ説明用なので辞典から除外） */
-(function(){
-  var body = document.getElementById('gbody');
-  var html = '<dl class="gcards">';
-  for (var term in GLOSSARY){
-    if (term === '点線のことば') continue;
-    var e = GLOSSARY[term];
-    html += '<div class="gcard"><dt>' + term + '<small>' + e.yomi + '</small></dt><dd>' + e.def + '</dd></div>';
-  }
-  html += '</dl>';
-  body.innerHTML = html;
-})();
 
 /* ツールチップ */
 (function(){
@@ -663,23 +692,32 @@ var GLOSSARY = {
   window.addEventListener('scroll', function(){ if (current) hide(); }, {passive:true});
 })();
 
-/* あるあるチェック */
+/* 健康診断チェック */
 (function(){
-  var wrap = document.getElementById('aruaru');
-  var result = document.getElementById('aruaruResult');
-  var boxes = wrap.querySelectorAll('input[type="checkbox"]');
+  var boxes = document.querySelectorAll('ul.ck input[type="checkbox"]');
+  var fill = document.getElementById('ckfill');
+  var count = document.getElementById('ckcount');
+  var verdict = document.getElementById('ckverdict');
+  var total = boxes.length;
+  function judge(n){
+    if (n === 0) return {lit:false, msg:'チェックを入れると、ここに診断結果が出ます'};
+    var head = '<span class="v-score">' + n + ' / ' + total + '</span>';
+    if (n <= 5)  return {lit:true, msg: head + 'まだ伸びしろだらけです。まずは第2章（CLAUDE.md）と第3章（フォルダ）から。この2つだけで体感が大きく変わります。'};
+    if (n <= 11) return {lit:true, msg: head + '良い線です。土台はできています。チェックがつかなかった項目を、来週1つずつ潰していきましょう。'};
+    if (n <= 14) return {lit:true, msg: head + 'かなりの環境設計者です。残りの項目は、あなたの環境の「最後の穴」。埋める価値があります。'};
+    return {lit:true, msg: head + '全項目クリア。あとは第4章の育成ループを回し続けるだけです。この環境自体が、あなたの資産です。'};
+  }
   function update(){
-    var n = wrap.querySelectorAll('input:checked').length;
+    var n = document.querySelectorAll('ul.ck input:checked').length;
     boxes.forEach(function(b){ b.closest('label').classList.toggle('on', b.checked); });
-    if (n === 0){
-      result.className = 'aruaru-result';
-      result.textContent = 'チェックを入れると、ここに結果が出ます';
-    } else {
-      result.className = 'aruaru-result lit';
-      result.textContent = n + '個の仕事が、AIに任せられる候補です。まずはどれか1つ、練習台にしてみませんか。';
-    }
+    fill.style.width = (n / total * 100) + '%';
+    count.textContent = n + ' / ' + total;
+    var v = judge(n);
+    verdict.classList.toggle('lit', v.lit);
+    verdict.innerHTML = v.msg;
   }
   boxes.forEach(function(b){ b.addEventListener('change', update); });
+  update();
 })();
 
 /* ナビの現在地ハイライト */
